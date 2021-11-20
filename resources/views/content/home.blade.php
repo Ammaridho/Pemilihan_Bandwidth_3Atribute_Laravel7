@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Kasarnya dulu boss:</h1>
-
+    
     <br><br>
 
     <div class="container">
@@ -26,29 +26,31 @@
                 <th scope="row">Total</th>
                 <td></td>
                 <td>{{$jmlKel}}</td>
-                <td>{{$jmlKurang}}</td>
-                <td>{{$jmlCukup}}</td>
-                <td>{{$jmlLebih}}</td>
+                <td>{{$jml[0]}}</td>
+                <td>{{$jml[1]}}</td>
+                <td>{{$jml[2]}}</td>
                 <td>{{$totEntropykel}}</td>
                 <td></td>
               </tr>
 
               {{-- @for ($i = 0; $i < count($macamAtribut); $i++) --}}
-              @for ($i = 0; $i < 4; $i++)
+              @for ($i = 0; $i < count($hasil); $i++)
                 <tr>
-                  <th scope="row">{{$macamAtribut[$i]}}</th>
+                  <th scope="row">{{$hasil[$i]['macamAtribut']}}</th>
                   <th colspan="6"></th>
-                  <th>{{$allGain[$i]}}</th>
+                  <th>{{$hasil[$i]['gain']}}</th>
                 </tr>
 
-                @for ($j = 0; $j < count($arrayNamaBagianAttribut[$i]); $j++)
+                <?php //dd($hasil[$i]['sortingTarget'][0][0]);?>
+
+                @for ($j = 0; $j < count($hasil[$i]['arrayNamaBagianAttribut']); $j++)
                 <tr>
-                  <td colspan="2">{{$arrayNamaBagianAttribut[$i][$j]}}</td>
-                  <td>{{$totalValueAttribute[$i][$j]}}</td>
-                  <td>{{$sortingTarget[$i][$j][0]}}</td>
-                  <td>{{$sortingTarget[$i][$j][1]}}</td>
-                  <td>{{$sortingTarget[$i][$j][2]}}</td>
-                  <td>{{$allEntropy[$i][$j]}}</td>
+                  <td colspan="2">{{$hasil[$i]['arrayNamaBagianAttribut'][$j]}}</td>
+                  <td>{{$hasil[$i]['totalValueAttribute'][$j]}}</td>
+                  <td>{{$hasil[$i]['sortingTarget'][$j][0]}}</td>
+                  <td>{{$hasil[$i]['sortingTarget'][$j][1]}}</td>
+                  <td>{{$hasil[$i]['sortingTarget'][$j][2]}}</td>
+                  <td>{{$hasil[$i]['entropy'][$j]}}</td>
                 </tr>
                 @endfor
               @endfor
