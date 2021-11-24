@@ -15,11 +15,80 @@ class homeController extends Controller
         return view('content.home',$this->Algoritma());
     }
 
+    public function ChooseData()
+    {
+        //disini yang diutak atik ================================================================================
+
+                // catatan: komentari yang datanya tidak ingin digunakan, hanya bisa menggunakan satu data.
+
+                //Itterasi pertama pasti menggunakan semua data
+                $dataPatokan = $this->selection()['dataKel'];
+
+                //Sorting Bandwidth
+                    // $dataPatokan = $this->selection()['brendah'];
+                    // $dataPatokan = $this->selection()['bsedang'];
+                    // $dataPatokan = $this->selection()['btinggi'];
+
+                //Sorting jumlah penghuni
+                    // $dataPatokan = $this->selection()['psedikit'];
+                    // $dataPatokan = $this->selection()['pnormal'];
+                    // $dataPatokan = $this->selection()['pbanyak'];
+
+                //sorting banyak gadget
+                    // $dataPatokan = $this->selection()['gsedikit'];
+                    // $dataPatokan = $this->selection()['gsedang'];
+                    // $dataPatokan = $this->selection()['gbanyak'];
+
+                // Sorting Range
+                    // $dataPatokan = $this->selection()['dataRinganq']; 
+                    // $dataPatokan = $this->selection()['dataSedangq']; 
+                    // $dataPatokan = $this->selection()['dataBeratq'];
+
+
+            //======================================================================================================== 
+
+            return $dataPatokan;
+    }
+
     public function Algoritma()
+    {
+
+        //Oper Data Patokan dari selection
+            $dataPatokan = $this->ChooseData();
+
+            //Keseluruhan
+
+            $jmlKel   = count($dataPatokan);
+            $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
+            $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
+            $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
+
+            // Semua data di Entropy
+            $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
+
+            // ========================================================================================================
+
+            // Bandwidth
+                $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Jumlah Penghuni
+                $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Banyak Gadget
+                $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Nilai Range
+                $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
+
+
+        return compact('jmlKel','jml','totEntropykel','hasil');
+    }
+
+    public function Selection()
     {
         // Semua Sorting Sorting:
             //Itterasi pertama pasti menggunakan semua data
-                $dataKel = internet_keluarga::all();
+            $dataKel = internet_keluarga::all();
 
             //Sorting Bandwidth
                 $brendah = $dataKel->where('bandwidth','<=',20);
@@ -160,61 +229,7 @@ class homeController extends Controller
                     $dataSedangq = internet_keluarga::findMany($sedangqq); 
                     $dataBeratq  = internet_keluarga::findMany($beratqq); 
 
-
-            //disini yang diutak atik ================================================================================
-
-                // catatan: komentari yang datanya tidak ingin digunakan, hanya bisa menggunakan satu data.
-
-                //Itterasi pertama pasti menggunakan semua data
-                    $dataPatokan = $dataKel;
-
-                //Sorting Bandwidth
-                    // $dataPatokan = $brendah;
-                    // $dataPatokan = $bsedang;
-                    // $dataPatokan = $btinggi;
-
-                //Sorting jumlah penghuni
-                    // $dataPatokan = $psedikit;
-                    // $dataPatokan = $pnormal;
-                    // $dataPatokan = $pbanyak;
-
-                //sorting banyak gadget
-                    // $dataPatokan = $gsedikit;
-                    // $dataPatokan = $gsedang;
-                    // $dataPatokan = $gbanyak;
-
-                // Sorting Range
-                    // $dataPatokan = $dataRinganq; 
-                    // $dataPatokan = $dataSedangq; 
-                    // $dataPatokan = $dataBeratq;
-
-
-            //======================================================================================================== 
-
-            $jmlKel   = count($dataPatokan);
-            $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
-            $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
-            $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
-
-            // Entropy
-            $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
-
-            // ========================================================================================================
-
-            // Bandwidth
-                $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
-
-            // Jumlah Penghuni
-                $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
-
-            // Banyak Gadget
-                $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
-
-            // Nilai Range
-                $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
-
-
-        return compact('jmlKel','jml','totEntropykel','hasil');
+        return compact('dataKel','brendah','bsedang','btinggi','psedikit','pnormal','pbanyak','gsedikit','gsedang','gbanyak','dataRinganq','dataSedangq','dataBeratq');
     }
 
     public function Bandwidth($jmlKel,$totEntropykel,$dataPatokan)
