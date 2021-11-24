@@ -1,9 +1,6 @@
 @extends('layout.base')
 
 @section('content')
-    <h1>Kasarnya dulu boss:</h1>
-    
-    <br><br>
 
     <div class="container">
 
@@ -31,17 +28,14 @@
                 <td>{{$jml[2]}}</td>
                 <td>{{$totEntropykel}}</td>
                 <td></td>
-              </tr>
+              </tr>      
 
-              {{-- @for ($i = 0; $i < count($macamAtribut); $i++) --}}
               @for ($i = 0; $i < count($hasil); $i++)
                 <tr>
                   <th scope="row">{{$hasil[$i]['macamAtribut']}}</th>
                   <th colspan="6"></th>
                   <th>{{$hasil[$i]['gain']}}</th>
-                </tr>
-
-                <?php //dd($hasil[$i]['sortingTarget'][0][0]);?>
+                </tr>                
 
                 @for ($j = 0; $j < count($hasil[$i]['arrayNamaBagianAttribut']); $j++)
                 <tr>
