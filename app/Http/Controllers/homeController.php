@@ -17,7 +17,7 @@ class homeController extends Controller
 
     public function Algoritma()
     {
-        // TOTAL
+        // Semua Sorting Sorting:
             //Itterasi pertama pasti menggunakan semua data
                 $dataKel = internet_keluarga::all();
 
@@ -29,7 +29,7 @@ class homeController extends Controller
             //Sorting jumlah penghuni
                 $psedikit = $dataKel->where('jumlahPenghuni','<=',3);
                 $pnormal  = $dataKel->where('jumlahPenghuni','<=',5)->where('jumlahPenghuni','>',3);
-                $pbanyak  = $dataKel->where('jumlahPenghuni','>',5); //coba ini akan devided by zero karena datanya kosong
+                $pbanyak  = $dataKel->where('jumlahPenghuni','>',5);
 
             //sorting banyak gadget
                 $gsedikit = $dataKel->where('jumlahGadget','<=',5);
@@ -163,8 +163,30 @@ class homeController extends Controller
 
             //disini yang diutak atik ================================================================================
 
-                
-                $dataPatokan = $dataBeratq;
+                // catatan: komentari yang datanya tidak ingin digunakan, hanya bisa menggunakan satu data.
+
+                //Itterasi pertama pasti menggunakan semua data
+                    $dataPatokan = $dataKel;
+
+                //Sorting Bandwidth
+                    // $dataPatokan = $brendah;
+                    // $dataPatokan = $bsedang;
+                    // $dataPatokan = $btinggi;
+
+                //Sorting jumlah penghuni
+                    // $dataPatokan = $psedikit;
+                    // $dataPatokan = $pnormal;
+                    // $dataPatokan = $pbanyak;
+
+                //sorting banyak gadget
+                    // $dataPatokan = $gsedikit;
+                    // $dataPatokan = $gsedang;
+                    // $dataPatokan = $gbanyak;
+
+                // Sorting Range
+                    // $dataPatokan = $dataRinganq; 
+                    // $dataPatokan = $dataSedangq; 
+                    // $dataPatokan = $dataBeratq;
 
 
             //======================================================================================================== 
