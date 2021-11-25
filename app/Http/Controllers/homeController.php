@@ -15,6 +15,23 @@ class homeController extends Controller
         return view('content.home',$this->Algoritma(''));
     }
 
+    public function GainTertinggi($itterasi)
+    {
+        $gainTeringgi = max(array_column($itterasi['hasil'],'gain'));    //ambil nilai gain terbesar
+
+        for($i = 0 ; $i < count($itterasi['hasil']); $i++){
+            if($itterasi['hasil'][$i]['gain'] == $gainTeringgi){
+                $indexAtrributGainTertinggi = $i;                       //ambil index array yang memiliki gain tertinggi
+            }
+        }
+
+        $macamAtribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['macamAtribut'];
+        
+        $arrayNamaBagianAttribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['arrayNamaBagianAttribut'];
+
+        return compact('macamAtribut','arrayNamaBagianAttribut');
+    }
+
     public function CreateTree()
     {
         //Itterasi Pertama ==================================================================
@@ -25,31 +42,58 @@ class homeController extends Controller
         // ambil atribute dengan gain tertinggi
         // Buat Cabang
 
-        // dd($itterasi['hasil']);
-
-        $gainTeringgi = max(array_column($itterasi['hasil'],'gain'));    //ambil nilai gain terbesar
-
-        for($i = 0 ; $i < count($itterasi['hasil']); $i++){
-            if($itterasi['hasil'][$i]['gain'] == $gainTeringgi){
-                $indexAtrributGainTertinggi = $i;                       //ambil index array yang memiliki gain tertinggi
-            }
-        }
-
-        // dd($itterasi['hasil'][$indexAtrributGainTertinggi]['macamAtribut']);   //Ambil Nama cabangnya
-
-        $macamAtribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['macamAtribut'];
+        $akar1 = $macamAtribut = $this->GainTertinggi($itterasi)['macamAtribut'];                        //akar pertama
         
-        $arrayNamaBagianAttribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['arrayNamaBagianAttribut'];
-
-        for ($i=0; $i < count($itterasi['hasil'][$indexAtrributGainTertinggi]['arrayNamaBagianAttribut']); $i++) { 
-            $hasilAlgoritma[$i] = $this->ChooseData($macamAtribut,$arrayNamaBagianAttribut[$i]);
-        }
-        
-        // dd($hasilAlgoritma[0]); //range penggunaan ringan
+        $arrayNamaBagianAttribut =  $this->GainTertinggi($itterasi)['arrayNamaBagianAttribut'];
 
 
         // Iterasi ke dua ======================================================================================
+        for ($i=0; $i < count($arrayNamaBagianAttribut); $i++) { 
 
+            $hasilAlgoritma2[$i] = $this->ChooseData($macamAtribut,$arrayNamaBagianAttribut[$i]);  //ambil data sesuai seleksi
+
+            $itterasi2[$i] = $this->Algoritma($hasilAlgoritma2[$i]);
+            
+            $akar2[$i] = $macamAtribut2[$i] = $this->GainTertinggi($itterasi2[$i])['macamAtribut'];
+        
+            $arrayNamaBagianAttribut2[$i] =  $this->GainTertinggi($itterasi2[$i])['arrayNamaBagianAttribut'];
+
+
+            // Iterasi ke tiga ======================================================================================
+            for ($j=0; $j < count($arrayNamaBagianAttribut2); $j++) { 
+
+                $hasilAlgoritma3[$j] = $this->ChooseData($macamAtribut2[$i],$arrayNamaBagianAttribut2[$i][$j]);  //ambil data sesuai seleksi
+        
+                $itterasi3[$j] = $this->Algoritma($hasilAlgoritma3[$j]);
+
+                $akar3[$j] = $macamAtribut3[$j] = $this->GainTertinggi($itterasi3[$j])['macamAtribut'];
+        
+                $arrayNamaBagianAttribut3[$j] =  $this->GainTertinggi($itterasi3[$j])['arrayNamaBagianAttribut'];
+
+
+
+                // Iterasi ke empat ======================================================================================
+                for ($k=0; $k < count($arrayNamaBagianAttribut3); $k++) { 
+    
+                    $hasilAlgoritma4[$k] = $this->ChooseData($macamAtribut3[$j],$arrayNamaBagianAttribut3[$j][$k]);  //ambil data sesuai seleksi
+        
+                    $itterasi4[$k] = $this->Algoritma($hasilAlgoritma4[$k]);
+    
+                    $akar3[$k] = $macamAtribut4[$k] = $this->GainTertinggi($itterasi4[$k])['macamAtribut'];
+            
+                    $arrayNamaBagianAttribut4[$k] =  $this->GainTertinggi($itterasi4[$k])['arrayNamaBagianAttribut'];
+    
+                }
+            }
+        }
+
+        dd($arrayNamaBagianAttribut3);
+
+
+        
+
+
+        
         //urutan:
         // sudah didapatkan cabang
         // kelompokkan berdasarkan atribut (menjadi dataPatokan)
