@@ -20,3 +20,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/','homeController@index')->name('home');
 
 Route::get('/tree','homeController@CreateTree')->name('createTree');
+
+Route::get('/resultTree','homeController@resultTree')->name('resultTree');
