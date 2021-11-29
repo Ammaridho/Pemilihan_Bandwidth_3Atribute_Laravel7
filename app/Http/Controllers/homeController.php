@@ -12,6 +12,7 @@ class homeController extends Controller
 {
     public function index()
     {
+        set_time_limit(180);
         return view('content.home',$this->Algoritma(''));
     }
 
@@ -37,25 +38,26 @@ class homeController extends Controller
         set_time_limit(180);
 
         //Itterasi ke 1 ==================================================================
-        $itterasi = $this->Algoritma(''); //array data
+        $itterasi = $this->Algoritma(''); //array data awal (semua data)
 
         // mengambil nilai yang ada sebanyak
         // bandingkan gainnya
         // ambil atribute dengan gain tertinggi
         // Buat Cabang
 
-        // dd($itterasi['dataPatokan']);
-
         $akar1 = $macamAtribut = $this->GainTertinggi($itterasi)['macamAtribut'];                        //akar pertama
         
         $arrayNamaBagianAttribut =  $this->GainTertinggi($itterasi)['arrayNamaBagianAttribut'];
 
-
         // Iterasi ke 2 ======================================================================================
         for ($i=0; $i < count($arrayNamaBagianAttribut); $i++) { 
 
-            $hasilAlgoritma2[$i] = $this->ChooseData($itterasi['dataPatokan'],$macamAtribut,$arrayNamaBagianAttribut[$i]);  //ambil data belum berkurang dan masih semua data
+            //membagi data menjadi 3 sesuai atribut
+            $hasilAlgoritma2[$i] = $this->ChooseData($itterasi['dataPatokan'],$macamAtribut,$arrayNamaBagianAttribut[$i]);
 
+            // dd($this->Algoritma($hasilAlgoritma2[$i])); //57 data rendah
+
+            //dari masing masing data yang sudah dibagi, dipecah datanya sesuai sifatnya masing"
             $itterasi2[$i] = $this->Algoritma($hasilAlgoritma2[$i]);
             
             $akar2[$i] = $macamAtribut2[$i] = $this->GainTertinggi($itterasi2[$i])['macamAtribut'];
@@ -75,28 +77,39 @@ class homeController extends Controller
                 $arrayNamaBagianAttribut3[$i][$j] =  $this->GainTertinggi($itterasi3[$i][$j])['arrayNamaBagianAttribut'];
 
 
-                // ITTERASI KE EMPAT BELUM BISA, HARUS DIBUAT BATASAN AGAR TIDAK ERROR
-
-
-                // // Iterasi ke 4 ======================================================================================
-                // for ($k=0; $k < count($arrayNamaBagianAttribut3[$i][$j]); $k++) { 
+                // Iterasi ke 4 ======================================================================================
+                for ($k=0; $k < count($arrayNamaBagianAttribut3[$i][$j]); $k++) { 
     
-                //     $hasilAlgoritma4[$i][$j][$k] = $this->ChooseData($itterasi3[$i][$j]['dataPatokan'],$macamAtribut3[$i][$j],$arrayNamaBagianAttribut3[$i][$j][$k]); 
+                    $hasilAlgoritma4[$i][$j][$k] = $this->ChooseData($itterasi3[$i][$j]['dataPatokan'],$macamAtribut3[$i][$j],$arrayNamaBagianAttribut3[$i][$j][$k]); 
                     
                     
-                //     $itterasi4[$i][$j][$k] = $this->Algoritma($hasilAlgoritma4[$i][$j][$k]);
+                    $itterasi4[$i][$j][$k] = $this->Algoritma($hasilAlgoritma4[$i][$j][$k]);
     
-                //     $akar4[$i][$j][$k] = $macamAtribut4[$i][$j][$k] = $this->GainTertinggi($itterasi4[$i][$j][$k])['macamAtribut'];
+                    $akar4[$i][$j][$k] = $macamAtribut4[$i][$j][$k] = $this->GainTertinggi($itterasi4[$i][$j][$k])['macamAtribut'];
             
-                //     $arrayNamaBagianAttribut4[$i][$j][$k] =  $this->GainTertinggi($itterasi4[$i][$j][$k])['arrayNamaBagianAttribut'];
+                    $arrayNamaBagianAttribut4[$i][$j][$k] =  $this->GainTertinggi($itterasi4[$i][$j][$k])['arrayNamaBagianAttribut'];
                     
-                // }
+
+                    // Iterasi ke 5 ======================================================================================
+                    for ($l=0; $l < count($arrayNamaBagianAttribut4[$i][$j][$k]); $l++) { 
+    
+                        $hasilAlgoritma5[$i][$j][$k][$l] = $this->ChooseData($itterasi4[$i][$j][$k]['dataPatokan'],$macamAtribut4[$i][$j][$k],$arrayNamaBagianAttribut3[$i][$j][$k][$l]); 
+                        
+                        
+                        $itterasi5[$i][$j][$k][$l] = $this->Algoritma($hasilAlgoritma5[$i][$j][$k][$l]);
+        
+                        $akar5[$i][$j][$k][$l] = $macamAtribut5[$i][$j][$k][$l] = $this->GainTertinggi($itterasi5[$i][$j][$k][$l])['macamAtribut'];
+                
+                        $arrayNamaBagianAttribut5[$i][$j][$k][$l] =  $this->GainTertinggi($itterasi5[$i][$j][$k][$l])['arrayNamaBagianAttribut'];
+                        
+                    }
+                }
             }
         }
 
         //seharusnya setelah didapatkan akar, maka cabang selanjutnya menggunakan data sesuai banyak data pada cabang tersebut
 
-        dd($arrayNamaBagianAttribut);
+        dd($akar4);
 
         return view('content.resultTree',compact('akar'));
     }
@@ -105,7 +118,7 @@ class homeController extends Controller
     {
         //disini yang diutak atik ================================================================================
         // dd($dataItterasi);
-                // catatan: komentari yang datanya tidak ingin digunakan, hanya bisa menggunakan satu data.
+            // catatan: komentari yang datanya tidak ingin digunakan, hanya bisa menggunakan satu data.
 
                 // dd($dataPatokan = $this->selection($dataItterasi));
 
@@ -118,7 +131,7 @@ class homeController extends Controller
                 if ($macamAtribut == 'Bandwidth') {
                     if ($arrayNamaBagianAttribut == 'Rendah') {
                         $dataPatokan = $this->selection($dataItterasi)['brendah'];
-                    }elseif($arrayNamaBagianAttribut = 'Sedang'){
+                    }elseif($arrayNamaBagianAttribut == 'Sedang'){
                         $dataPatokan = $this->selection($dataItterasi)['bsedang'];
                     }else{
                         $dataPatokan = $this->selection($dataItterasi)['btinggi'];
@@ -164,210 +177,266 @@ class homeController extends Controller
 
             return $dataPatokan;
     }
+    
+    public function Selection($dataItterasi)
+    {
+        // Semua Sorting Sorting:
+        //Itterasi pertama pasti menggunakan semua data
+        
+        if($dataItterasi != ''){
+            $dataPatokan = $dataItterasi;
+        }else{
+            $dataKel = $dataPatokan = internet_keluarga::all();
+        }
+        
+        //Sorting Bandwidth
+        $brendah = $dataPatokan->where('bandwidth','<=',20);
+        $bsedang = $dataPatokan->where('bandwidth','<=',40)->where('bandwidth','>',20);
+        $btinggi = $dataPatokan->where('bandwidth','>',40);
+        
+        //Sorting jumlah penghuni
+        $psedikit = $dataPatokan->where('jumlahPenghuni','<=',3);
+        $pnormal  = $dataPatokan->where('jumlahPenghuni','<=',5)->where('jumlahPenghuni','>',3);
+        $pbanyak  = $dataPatokan->where('jumlahPenghuni','>',5);
+        
+        //sorting banyak gadget
+        $gsedikit = $dataPatokan->where('jumlahGadget','<=',5);
+        $gsedang  = $dataPatokan->where('jumlahGadget','>',5)->where('jumlahGadget','<=',7);
+        $gbanyak  = $dataPatokan->where('jumlahGadget','>',7);
+        
+        
+        //Sorting Range
+        $keluargaKe = 0;
+        $banyakData = 0;
+        do{
+            if(internet_keluarga::find($keluargaKe)){       //Ambil semua data
+                // Sorting data
+                $ringan = internet_keluarga::
+                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
+                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
+                select('internet_keluarga.id','detail_gadget.range')->
+                where('range','ringan')->
+                where('internet_keluarga.id',$keluargaKe)->
+                get();
+
+                $sedang = internet_keluarga::
+                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
+                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
+                select('internet_keluarga.id','detail_gadget.range')->
+                where('range','sedang')->
+                where('internet_keluarga.id',$keluargaKe)->
+                get();
+
+                $berat  = internet_keluarga::
+                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
+                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
+                select('internet_keluarga.id','detail_gadget.range')->
+                where('range','berat')->
+                where('internet_keluarga.id',$keluargaKe)->
+                get();
+                
+                
+                // Jumlah mentah gadget
+                $mentahValue[$keluargaKe][0] = count($ringan);
+                $mentahValue[$keluargaKe][1] = count($sedang);
+                $mentahValue[$keluargaKe][2] = count($berat);          
+                
+                // jumlah dengan point
+                $pointValue[$keluargaKe][0] = count($ringan)*1;
+                $pointValue[$keluargaKe][1] = count($sedang)*2;
+                $pointValue[$keluargaKe][2] = count($berat)*3;
+                
+                //total point perkeluarga
+                $totalPoint[$keluargaKe] = count($ringan)*1 + count($sedang)*2 + count($berat)*3;
+                $banyakData += 1;
+                
+                // sorting kesimpulan range perkeluarga
+                if($totalPoint[$keluargaKe] < 10 ){
+                    $kesimpulanRange[$keluargaKe] = 'ringan';
+                    
+                }elseif($totalPoint[$keluargaKe] <= 15) {
+                    $kesimpulanRange[$keluargaKe] = 'sedang';
+                    
+                }else{
+                    $kesimpulanRange[$keluargaKe] = 'berat';
+                }
+            }
+            $keluargaKe++;
+        }while($banyakData < count(internet_keluarga::all()));
+
+        // dd($kesimpulanRange);   //simpulan perkeluarga
+        
+        //  search index masing masing
+        $dataKe = 0;
+        $dataMasuk = 0;
+        $a = $b = $c = $d =0;
+        do{
+            if(internet_keluarga::find($dataKe)){
+                $dataMasuk += 1;
+                if($kesimpulanRange[$dataKe] == 'ringan'){              //mengelompokkan id keluarga berdasarkan range
+                    $indexData['ringan'][$a] = $dataKe;
+                    $a++;
+                }elseif($kesimpulanRange[$dataKe] == 'sedang'){
+                    $indexData['sedang'][$b] = $dataKe;
+                    $b++;
+                }else{
+                    $indexData['berat'][$c] = $dataKe;
+                    $c++;
+                }
+            }
+            $dataKe++;
+        }while($dataMasuk < count($kesimpulanRange));
+
+        // dd($indexData['ringan']);
+        
+        // //sorting target berdasarkan index
+        // $ringanq = [];
+        // $sedangq = [];
+        // $beratq = [];
+        
+        // //ambil database bukan hanya id lagi
+        // //sorting simpulan ringan
+        // for ($i=0; $i < count($indexData['ringan']); $i++) { 
+        //     if(($dataPatokan->where('id',$indexData['ringan'][$i])->first()) != NULL){
+        //         $ringanq[$indexData['ringan'][$i]] = $dataPatokan->where('id',$indexData['ringan'][$i])->first();
+        //     }
+        // }
+        // //ini memungkinkan $ringanq kosong, cara kerjanya adalah mendapatkan semua index data lalu dikelompokkan, lalu membandingkan dengan data yang telah di decision kembali, jika data yang sudah di decision hilang maka index data akan memungkinkan null, sehingga harus di cek ulang null atau tidak, dapat memungkinkan semua data null karena sudah di decision.
+
+        // //sorting simpulan sedang
+        // for ($i=0; $i < count($indexData['sedang']); $i++) { 
+        //     if(($dataPatokan->where('id',$indexData['sedang'][$i])->first()) != NULL){
+        //         $sedangq[$indexData['sedang'][$i]] = $dataPatokan->where('id',$indexData['sedang'][$i])->first();
+        //     }
+        // }
+        // //sorting simpulan berat
+        // for ($i=0; $i < count($indexData['berat']); $i++) { 
+        //     if(($dataPatokan->where('id',$indexData['berat'][$i])->first()) != NULL){
+        //         $beratq[$indexData['berat'][$i]] = $dataPatokan->where('id',$indexData['berat'][$i])->first();
+        //     }
+        // }
+        
+        // // dd($beratq);
+        
+        // //Niatnya:
+        // //Ambil semua index yang menggambarkan id data
+        // //masukkan ke array
+        // for ($i=0; $i < count($ringanq); $i++) { 
+        //     $ringanqq[$i] = array_values($ringanq)[$i]['id']; //ambil perindex
+        // }
+        // for ($i=0; $i < count($sedangq); $i++) { 
+        //     $sedangqq[$i] = array_values($sedangq)[$i]['id']; //ambil perindex
+        // }
+        // for ($i=0; $i < count($beratq); $i++) { 
+        //     $beratqq[$i] = array_values($beratq)[$i]['id']; //ambil perindex
+        // }
+
+        // dd($beratqq);
+
+        // dd($indexData['berat']);
+
+        // dd($dataPatokan->find([1,2,3]));
+
+        // dd($dataPatokan->find($beratqq));
+        
+        //gunakan method find untuk mendapatkan data dari database
+        $dataRinganq = $dataPatokan->find($indexData['ringan']); 
+        $dataSedangq = $dataPatokan->find($indexData['sedang']); 
+        $dataBeratq  = $dataPatokan->find($indexData['berat']); 
+        
+        return compact('dataPatokan','brendah','bsedang','btinggi','psedikit','pnormal','pbanyak','gsedikit','gsedang','gbanyak','dataRinganq','dataSedangq','dataBeratq');
+    }
 
     public function Algoritma($dataPatokan)
     {
-        
+
         //Oper Data Patokan dari selection
             if($dataPatokan == ''){
-                $dataPatokan = $this->ChooseData('','semua','');
-            }
 
-            //Keseluruhan
+                //Pengecekan masukkan kebawah =========================================
 
-            $jmlKel   = count($dataPatokan);
-            $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
-            $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
-            $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
+                    $dataPatokan = $this->ChooseData('','semua','');
+                    
+                    $dataPatokan = $this->selection($dataPatokan)['psedikit'];
+                    $dataPatokan = $this->selection($dataPatokan)['brendah'];
+                    $dataPatokan = $this->selection($dataPatokan)['dataSedangq'];
+                    $dataPatokan = $this->selection($dataPatokan)['gsedang'];
 
-            // Semua data di Entropy
-            $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
+                    
 
-            // ========================================================================================================
+                    // dd($dataPatokan);
 
-            // Bandwidth
-                $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
+                // ====================================================================
 
-            // Jumlah Penghuni
-                $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
+                $jmlKel   = count($dataPatokan);
+                $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
+                $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
+                $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
 
-            // Banyak Gadget
-                $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
+                // Semua data di Entropy
+                $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
 
-            // Nilai Range
-                $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
+                // ========================================================================================================
+
+                // Bandwidth
+                    $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
+
+                // Jumlah Penghuni
+                    $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
+
+                // Banyak Gadget
+                    $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
+
+                // Nilai Range
+                    $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
+
+            }else{
+                // dd($dataPatokan);
+
+                $jmlKel   = count($dataPatokan);
+                $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
+                $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
+                $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
+
+                // Semua data di Entropy
+                $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
+
+                // ========================================================================================================
+
+                // Bandwidth
+                    $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
+
+                // Jumlah Penghuni
+                    $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
+
+                // Banyak Gadget
+                    $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
+
+                // Nilai Range
+                    $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
+
+
+                    // dd($hasil[2]);
+                }
 
 
         return compact('dataPatokan','jmlKel','jml','totEntropykel','hasil');
     }
-
-    public function Selection($dataItterasi)
-    {
-        // Semua Sorting Sorting:
-            //Itterasi pertama pasti menggunakan semua data
-
-            if($dataItterasi != ''){
-                $dataPatokan = $dataItterasi;
-            }else{
-                $dataKel = $dataPatokan = internet_keluarga::all();
-            }
-            
-            //Sorting Bandwidth
-                $brendah = $dataPatokan->where('bandwidth','<=',20);
-                $bsedang = $dataPatokan->where('bandwidth','<=',40)->where('bandwidth','>',20);
-                $btinggi = $dataPatokan->where('bandwidth','>',40);
-
-            //Sorting jumlah penghuni
-                $psedikit = $dataPatokan->where('jumlahPenghuni','<=',3);
-                $pnormal  = $dataPatokan->where('jumlahPenghuni','<=',5)->where('jumlahPenghuni','>',3);
-                $pbanyak  = $dataPatokan->where('jumlahPenghuni','>',5);
-
-            //sorting banyak gadget
-                $gsedikit = $dataPatokan->where('jumlahGadget','<=',5);
-                $gsedang  = $dataPatokan->where('jumlahGadget','>',5)->where('jumlahGadget','<=',7);
-                $gbanyak  = $dataPatokan->where('jumlahGadget','>',7);
-
-
-            //Sorting Range
-                $keluargaKe = 0;
-                $banyakData = 0;
-                    do{
-                        if(internet_keluarga::find($keluargaKe)){       //Ambil semua data
-                            // Sorting data
-                            $ringan = internet_keluarga::
-                                        join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                                        join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                                        select('internet_keluarga.id','detail_gadget.range')->
-                                        where('range','ringan')->
-                                        where('internet_keluarga.id',$keluargaKe)->
-                                        get();
-                            $sedang = internet_keluarga::
-                                        find($keluargaKe)->
-                                        join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                                        join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                                        select('internet_keluarga.id','detail_gadget.range')->
-                                        where('range','sedang')->
-                                        where('internet_keluarga.id',$keluargaKe)->
-                                        get();
-                            $berat  = internet_keluarga::
-                                        find($keluargaKe)->
-                                        join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                                        join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                                        select('internet_keluarga.id','detail_gadget.range')->
-                                        where('range','berat')->
-                                        where('internet_keluarga.id',$keluargaKe)->
-                                        get();
-
-                            
-                            // Jumlah mentah gadget
-                            $mentahValue[$keluargaKe][0] = count($ringan);
-                            $mentahValue[$keluargaKe][1] = count($sedang);
-                            $mentahValue[$keluargaKe][2] = count($berat);          
-
-                            // jumlah dengan point
-                            $pointValue[$keluargaKe][0] = count($ringan)*1;
-                            $pointValue[$keluargaKe][1] = count($sedang)*2;
-                            $pointValue[$keluargaKe][2] = count($berat)*3;
-
-                            //total point perkeluarga
-                            $totalPoint[$keluargaKe] = count($ringan)*1 + count($sedang)*2 + count($berat)*3;
-                            $banyakData += 1;
-
-                            // sorting kesimpulan range perkeluarga
-                            if($totalPoint[$keluargaKe] < 10 ){
-                                $kesimpulanRange[$keluargaKe] = 'ringan';
-
-                            }elseif($totalPoint[$keluargaKe] <= 15) {
-                                $kesimpulanRange[$keluargaKe] = 'sedang';
-
-                            }else{
-                                $kesimpulanRange[$keluargaKe] = 'berat';
-                            }
-                        }
-                        $keluargaKe++;
-                    }while($banyakData < count(internet_keluarga::all()));
-
-                    //  search index masing masing
-                    $dataKe = 0;
-                    $dataMasuk = 0;
-                    $a=$b=$c=$d=0;
-                    do{
-                        if(internet_keluarga::find($dataKe)){
-                            $dataMasuk += 1;
-                            if($kesimpulanRange[$dataKe] == 'ringan'){
-                                $indexData[0][$a] = $dataKe;
-                                $a++;
-                            }elseif($kesimpulanRange[$dataKe] == 'sedang'){
-                                $indexData[1][$b] = $dataKe;
-                                $b++;
-                            }else{
-                                $indexData[2][$c] = $dataKe;
-                                $c++;
-                            }
-                        }
-                        $dataKe++;
-                    }while($dataMasuk < count($kesimpulanRange));
-
-                    //sorting target berdasarkan index
-                    $ringanq = [];
-                    $sedangq = [];
-                    $beratq = [];
-
-                    //sorting simpulan ringan
-                        for ($i=0; $i < count($indexData[0]); $i++) { 
-                            if(($dataPatokan->where('id',$indexData[0][$i])->first()) != NULL){
-                            $ringanq[$indexData[0][$i]] = $dataPatokan->where('id',$indexData[0][$i])->first();
-                            }
-                        }
-                    //sorting simpulan sedang
-                        for ($i=0; $i < count($indexData[1]); $i++) { 
-                            if(($dataPatokan->where('id',$indexData[1][$i])->first()) != NULL){
-                                $sedangq[$indexData[1][$i]] = $dataPatokan->where('id',$indexData[1][$i])->first();
-                            }
-                        }
-                    //sorting simpulan berat
-                        for ($i=0; $i < count($indexData[2]); $i++) { 
-                            if(($dataPatokan->where('id',$indexData[2][$i])->first()) != NULL){
-                            $beratq[$indexData[2][$i]] = $dataPatokan->where('id',$indexData[2][$i])->first();
-                            }
-                        }
-
-
-                    //Niatnya:
-                    //Ambil semua index yang menggambarkan id data
-                    //masukkan ke array
-                    for ($i=0; $i < count($ringanq); $i++) { 
-                        $ringanqq[$i] = array_values($ringanq)[$i]['id']; //ambil perindex
-                    }
-                    for ($i=0; $i < count($sedangq); $i++) { 
-                        $sedangqq[$i] = array_values($sedangq)[$i]['id']; //ambil perindex
-                    }
-                    for ($i=0; $i < count($beratq); $i++) { 
-                        $beratqq[$i] = array_values($beratq)[$i]['id']; //ambil perindex
-                    }
-
-                    //gunakan method find untuk mendapatkan data dari database
-                    $dataRinganq = internet_keluarga::findMany($ringanqq); 
-                    $dataSedangq = internet_keluarga::findMany($sedangqq); 
-                    $dataBeratq  = internet_keluarga::findMany($beratqq); 
-
-        return compact('dataPatokan','brendah','bsedang','btinggi','psedikit','pnormal','pbanyak','gsedikit','gsedang','gbanyak','dataRinganq','dataSedangq','dataBeratq');
-    }
-
+    
     public function Bandwidth($jmlKel,$totEntropykel,$dataPatokan)
     {
         $macamAtribut = 'Bandwidth';
-
+        
         $arrayNamaBagianAttribut = ['Rendah','Sedang','Tinggi'];
-
+        
         // sorting kelompok bandwidth
         $rendah = $dataPatokan->where('bandwidth','<=',20);
         $sedang = $dataPatokan->where('bandwidth','<=',40)->where('bandwidth','>',20);
         $tinggi = $dataPatokan->where('bandwidth','>',40);
-
+        
         return $this->kompilasi($macamAtribut,$arrayNamaBagianAttribut,$jmlKel,$totEntropykel,$rendah,$sedang,$tinggi);
     }
-
+    
     public function JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan)
     {
         $macamAtribut = 'Jumlah Penghuni';
