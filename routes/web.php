@@ -22,3 +22,5 @@ Route::get('/','homeController@index')->name('home');
 Route::get('/tree','homeController@CreateTree')->name('createTree');
 
 Route::get('/resultTree','homeController@resultTree')->name('resultTree');
+
+Route::get('/treeDiagramTest','homeController@treeDiagramTest')->name('treeDiagramTest');

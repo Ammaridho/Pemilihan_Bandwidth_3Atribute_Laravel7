@@ -16,58 +16,19 @@ class homeController extends Controller
         return view('content.home',$this->Algoritma(''));
     }
 
-    public function treeDiagramTest()
+    public function GainTertinggi($itterasi)
     {
-        return view('content.resultTreetest');
-    }
+        $gainTeringgi = max(array_column($itterasi['hasil'],'gain'));    //ambil nilai gain terbesar
 
-    public function GainTertinggi($macamAtribut,$itterasi)
-    {
-        
-        $gainTeringgi = max(array_column($itterasi['hasil'],'gain'));    //Membandingkan masing masing gain atribut
-
-        if($gainTeringgi > 0){    //cek apakah gain tertinggi lebih dari nol
-
-            for($i = 0 ; $i < count($itterasi['hasil']); $i++){
-                if($itterasi['hasil'][$i]['gain'] == $gainTeringgi){
-                    $indexAtrributGainTertinggi = $i;                       //ambil index array yang memiliki gain tertinggi
-                }
+        for($i = 0 ; $i < count($itterasi['hasil']); $i++){
+            if($itterasi['hasil'][$i]['gain'] == $gainTeringgi){
+                $indexAtrributGainTertinggi = $i;                       //ambil index array yang memiliki gain tertinggi
             }
-
-            $macamAtribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['macamAtribut'];
-            
-            $arrayNamaBagianAttribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['arrayNamaBagianAttribut'];
-
-        }else{              //kalau tidak maka proses decision di stop
-
-            $kurang  = $itterasi['jml'][0];
-
-            $cukup = $itterasi['jml'][1];
-
-            $lebih  = $itterasi['jml'][2];
-
-            $array = [$kurang,$cukup,$lebih];
-
-            //persentasenya
-            $jumlahTerbesar = max([$kurang,$cukup,$lebih]);
-            $indexKe        = array_search($jumlahTerbesar,$array);
-            $jumlahTotal    = array_sum($itterasi['jml']);
-
-            $persentase = $jumlahTerbesar / $jumlahTotal * 100;
-
-            if($indexKe == 0){
-                $macam = 'Kurang';
-            }elseif($indexKe == 1){
-                $macam = 'Cukup';
-            }else{
-                $macam = 'Lebih';
-            }
-
-            $macamAtribut = $macam . ' ' . $persentase . '%';
-
-            $arrayNamaBagianAttribut = [];
-
         }
+
+        $macamAtribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['macamAtribut'];
+        
+        $arrayNamaBagianAttribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['arrayNamaBagianAttribut'];
 
         return compact('macamAtribut','arrayNamaBagianAttribut');
     }
@@ -77,76 +38,80 @@ class homeController extends Controller
         set_time_limit(180);
 
         //Itterasi ke 1 ==================================================================
-        $itterasi[1] = $this->Algoritma(''); //array data awal (semua data)
+        $itterasi = $this->Algoritma(''); //array data awal (semua data)
 
         // mengambil nilai yang ada sebanyak
         // bandingkan gainnya
         // ambil atribute dengan gain tertinggi
         // Buat Cabang
 
-        $akar[1] = $macamAtribut[1] = $this->GainTertinggi('',$itterasi[1])['macamAtribut'];                        //akar pertama
+        $akar1 = $macamAtribut = $this->GainTertinggi($itterasi)['macamAtribut'];                        //akar pertama
         
-        $arrayNamaBagianAttribut[1] =  $this->GainTertinggi($macamAtribut[1],$itterasi[1])['arrayNamaBagianAttribut'];
+        $arrayNamaBagianAttribut =  $this->GainTertinggi($itterasi)['arrayNamaBagianAttribut'];
 
         // Iterasi ke 2 ======================================================================================
-        for ($i=0; $i < count($arrayNamaBagianAttribut[1]); $i++) { 
+        for ($i=0; $i < count($arrayNamaBagianAttribut); $i++) { 
 
             //membagi data menjadi 3 sesuai atribut
-            $hasilAlgoritma[2][$i] = $this->ChooseData($itterasi[1]['dataPatokan'],$macamAtribut[1],$arrayNamaBagianAttribut[1][$i]);
+            $hasilAlgoritma2[$i] = $this->ChooseData($itterasi['dataPatokan'],$macamAtribut,$arrayNamaBagianAttribut[$i]);
+
+            // dd($this->Algoritma($hasilAlgoritma2[$i])); //57 data rendah
 
             //dari masing masing data yang sudah dibagi, dipecah datanya sesuai sifatnya masing"
-            $itterasi[2][$i] = $this->Algoritma($hasilAlgoritma[2][$i]);
+            $itterasi2[$i] = $this->Algoritma($hasilAlgoritma2[$i]);
             
-            $akar[2][$i] = $macamAtribut[2][$i] = $this->GainTertinggi($macamAtribut[1],$itterasi[2][$i])['macamAtribut'];
+            $akar2[$i] = $macamAtribut2[$i] = $this->GainTertinggi($itterasi2[$i])['macamAtribut'];
         
-            $arrayNamaBagianAttribut[2][$i] =  $this->GainTertinggi($macamAtribut[1],$itterasi[2][$i])['arrayNamaBagianAttribut'];
+            $arrayNamaBagianAttribut2[$i] =  $this->GainTertinggi($itterasi2[$i])['arrayNamaBagianAttribut'];
 
 
             // Iterasi ke 3 ======================================================================================
-                for ($j=0; $j < count($arrayNamaBagianAttribut[2][$i]); $j++) { 
+            for ($j=0; $j < count($arrayNamaBagianAttribut2[$i]); $j++) { 
 
-                    $hasilAlgoritma[3][$i][$j] = $this->ChooseData($itterasi[2][$i]['dataPatokan'],$macamAtribut[2][$i],$arrayNamaBagianAttribut[2][$i][$j]);
-            
-                    $itterasi[3][$i][$j] = $this->Algoritma($hasilAlgoritma[3][$i][$j]);
+                $hasilAlgoritma3[$i][$j] = $this->ChooseData($itterasi2[$i]['dataPatokan'],$macamAtribut2[$i],$arrayNamaBagianAttribut2[$i][$j]);
+        
+                $itterasi3[$i][$j] = $this->Algoritma($hasilAlgoritma3[$i][$j]);
 
-                    $akar[3][$i][$j] = $macamAtribut[3][$i][$j] = $this->GainTertinggi($macamAtribut[2],$itterasi[3][$i][$j])['macamAtribut'];
+                $akar3[$i][$j] = $macamAtribut3[$i][$j] = $this->GainTertinggi($itterasi3[$i][$j])['macamAtribut'];
+        
+                $arrayNamaBagianAttribut3[$i][$j] =  $this->GainTertinggi($itterasi3[$i][$j])['arrayNamaBagianAttribut'];
+
+
+                // Iterasi ke 4 ======================================================================================
+                for ($k=0; $k < count($arrayNamaBagianAttribut3[$i][$j]); $k++) { 
+    
+                    $hasilAlgoritma4[$i][$j][$k] = $this->ChooseData($itterasi3[$i][$j]['dataPatokan'],$macamAtribut3[$i][$j],$arrayNamaBagianAttribut3[$i][$j][$k]); 
+                    
+                    
+                    $itterasi4[$i][$j][$k] = $this->Algoritma($hasilAlgoritma4[$i][$j][$k]);
+    
+                    $akar4[$i][$j][$k] = $macamAtribut4[$i][$j][$k] = $this->GainTertinggi($itterasi4[$i][$j][$k])['macamAtribut'];
             
-                    $arrayNamaBagianAttribut[3][$i][$j] =  $this->GainTertinggi($macamAtribut[2],$itterasi[3][$i][$j])['arrayNamaBagianAttribut'];
+                    $arrayNamaBagianAttribut4[$i][$j][$k] =  $this->GainTertinggi($itterasi4[$i][$j][$k])['arrayNamaBagianAttribut'];
                     
 
-                    // Iterasi ke 4 ======================================================================================
-                    for ($k=0; $k < count($arrayNamaBagianAttribut[3][$i][$j]); $k++) { 
-        
-                        $hasilAlgoritma[4][$i][$j][$k] = $this->ChooseData($itterasi[3][$i][$j]['dataPatokan'],$macamAtribut[3][$i][$j],$arrayNamaBagianAttribut[3][$i][$j][$k]); 
+                    // Iterasi ke 5 ======================================================================================
+                    for ($l=0; $l < count($arrayNamaBagianAttribut4[$i][$j][$k]); $l++) { 
+    
+                        $hasilAlgoritma5[$i][$j][$k][$l] = $this->ChooseData($itterasi4[$i][$j][$k]['dataPatokan'],$macamAtribut4[$i][$j][$k],$arrayNamaBagianAttribut3[$i][$j][$k][$l]); 
                         
-                        $itterasi[4][$i][$j][$k] = $this->Algoritma($hasilAlgoritma[4][$i][$j][$k]);
+                        
+                        $itterasi5[$i][$j][$k][$l] = $this->Algoritma($hasilAlgoritma5[$i][$j][$k][$l]);
         
-                        $akar[4][$i][$j][$k] = $macamAtribut[4][$i][$j][$k] = $this->GainTertinggi($macamAtribut[3],$itterasi[4][$i][$j][$k])['macamAtribut'];
+                        $akar5[$i][$j][$k][$l] = $macamAtribut5[$i][$j][$k][$l] = $this->GainTertinggi($itterasi5[$i][$j][$k][$l])['macamAtribut'];
                 
-                        $arrayNamaBagianAttribut[4][$i][$j][$k] =  $this->GainTertinggi($macamAtribut[3],$itterasi[4][$i][$j][$k])['arrayNamaBagianAttribut'];
-
-
-                        // Iterasi ke 5 ======================================================================================
-                        for ($l=0; $l < count($arrayNamaBagianAttribut[4][$i][$j][$k]); $l++) { 
-        
-                            $hasilAlgoritma[5][$i][$j][$k][$l] = $this->ChooseData($itterasi[4][$i][$j][$k]['dataPatokan'],$macamAtribut[4][$i][$j][$k],$arrayNamaBagianAttribut[4][$i][$j][$k][$l]); 
-                            
-                            $itterasi[5][$i][$j][$k][$l] = $this->Algoritma($hasilAlgoritma[5][$i][$j][$k][$l]);
-            
-                            $akar[5][$i][$j][$k][$l] = $macamAtribut[5][$i][$j][$k][$l] = $this->GainTertinggi($macamAtribut[4],$itterasi[5][$i][$j][$k][$l])['macamAtribut'];
-                    
-                            $arrayNamaBagianAttribut[5][$i][$j][$k][$l] =  $this->GainTertinggi($macamAtribut[4],$itterasi[5][$i][$j][$k][$l])['arrayNamaBagianAttribut'];
-                            
-                        }
+                        $arrayNamaBagianAttribut5[$i][$j][$k][$l] =  $this->GainTertinggi($itterasi5[$i][$j][$k][$l])['arrayNamaBagianAttribut'];
+                        
                     }
                 }
             }
+        }
 
         //seharusnya setelah didapatkan akar, maka cabang selanjutnya menggunakan data sesuai banyak data pada cabang tersebut
 
-        // dd($akar[4]);
+        dd($akar4);
 
-        return view('content.resultTree',compact('itterasi','akar','arrayNamaBagianAttribut',));
+        return view('content.resultTree',compact('akar'));
     }
 
     public function ChooseData($dataItterasi,$macamAtribut,$arrayNamaBagianAttribut)
@@ -245,7 +210,6 @@ class homeController extends Controller
         $banyakData = 0;
         do{
             if(internet_keluarga::find($keluargaKe)){       //Ambil semua data
-                
                 // Sorting data
                 $ringan = internet_keluarga::
                 join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
@@ -322,6 +286,58 @@ class homeController extends Controller
             }
             $dataKe++;
         }while($dataMasuk < count($kesimpulanRange));
+
+        // dd($indexData['ringan']);
+        
+        // //sorting target berdasarkan index
+        // $ringanq = [];
+        // $sedangq = [];
+        // $beratq = [];
+        
+        // //ambil database bukan hanya id lagi
+        // //sorting simpulan ringan
+        // for ($i=0; $i < count($indexData['ringan']); $i++) { 
+        //     if(($dataPatokan->where('id',$indexData['ringan'][$i])->first()) != NULL){
+        //         $ringanq[$indexData['ringan'][$i]] = $dataPatokan->where('id',$indexData['ringan'][$i])->first();
+        //     }
+        // }
+        // //ini memungkinkan $ringanq kosong, cara kerjanya adalah mendapatkan semua index data lalu dikelompokkan, lalu membandingkan dengan data yang telah di decision kembali, jika data yang sudah di decision hilang maka index data akan memungkinkan null, sehingga harus di cek ulang null atau tidak, dapat memungkinkan semua data null karena sudah di decision.
+
+        // //sorting simpulan sedang
+        // for ($i=0; $i < count($indexData['sedang']); $i++) { 
+        //     if(($dataPatokan->where('id',$indexData['sedang'][$i])->first()) != NULL){
+        //         $sedangq[$indexData['sedang'][$i]] = $dataPatokan->where('id',$indexData['sedang'][$i])->first();
+        //     }
+        // }
+        // //sorting simpulan berat
+        // for ($i=0; $i < count($indexData['berat']); $i++) { 
+        //     if(($dataPatokan->where('id',$indexData['berat'][$i])->first()) != NULL){
+        //         $beratq[$indexData['berat'][$i]] = $dataPatokan->where('id',$indexData['berat'][$i])->first();
+        //     }
+        // }
+        
+        // // dd($beratq);
+        
+        // //Niatnya:
+        // //Ambil semua index yang menggambarkan id data
+        // //masukkan ke array
+        // for ($i=0; $i < count($ringanq); $i++) { 
+        //     $ringanqq[$i] = array_values($ringanq)[$i]['id']; //ambil perindex
+        // }
+        // for ($i=0; $i < count($sedangq); $i++) { 
+        //     $sedangqq[$i] = array_values($sedangq)[$i]['id']; //ambil perindex
+        // }
+        // for ($i=0; $i < count($beratq); $i++) { 
+        //     $beratqq[$i] = array_values($beratq)[$i]['id']; //ambil perindex
+        // }
+
+        // dd($beratqq);
+
+        // dd($indexData['berat']);
+
+        // dd($dataPatokan->find([1,2,3]));
+
+        // dd($dataPatokan->find($beratqq));
         
         //gunakan method find untuk mendapatkan data dari database
         $dataRinganq = $dataPatokan->find($indexData['ringan']); 
@@ -341,10 +357,9 @@ class homeController extends Controller
 
                     $dataPatokan = $this->ChooseData('','semua','');
                     
-                    // $dataPatokan = $this->selection($dataPatokan)['pbanyak'];
-                    // $dataPatokan = $this->selection($dataPatokan)['dataBeratq'];
+                    // $dataPatokan = $this->selection($dataPatokan)['psedikit'];
                     // $dataPatokan = $this->selection($dataPatokan)['brendah'];
-                    
+                    // $dataPatokan = $this->selection($dataPatokan)['dataSedangq'];
                     // $dataPatokan = $this->selection($dataPatokan)['gsedang'];
 
                     
