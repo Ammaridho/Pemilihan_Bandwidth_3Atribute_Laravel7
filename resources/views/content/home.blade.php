@@ -2,10 +2,18 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container mt-5">
 
-        {{-- Table --}}
-        <table class="table table-hover text-center">
+      <div class="row">
+        <div class="col text-center">
+          <h1>Semua Dataset</h1>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col">
+          {{-- Table --}}
+          <table class="table table-hover text-center">
             <thead>
               <tr>
                 <th colspan="2">Atribut</th>
@@ -52,6 +60,9 @@
               
             </tbody>
           </table>
+        </div>
+      </div>
+        
 
     </div>
     

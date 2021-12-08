@@ -3,6 +3,7 @@
 	padding: 0px;
 	margin: 0px;
 	box-sizing: border-box;
+	color: black;
 }
 
 /* body {
@@ -21,6 +22,7 @@
 	padding-top: 20px;
 	position: relative;
 	transition: .5s;
+	
 }
 .tree li {
 	display: inline-table;
@@ -35,14 +37,14 @@
 	position: absolute;
 	top: 0;
 	right: 50%;
-	border-top: 1px solid #ccc;
+	border-top: 1px solid black;
 	width: 51%;
 	height: 10px;
 }
 .tree li::after {
 	right: auto;
 	left: 50%;
-	border-left: 1px solid #ccc;
+	border-left: 1px solid black;
 }
 .tree li:only-child::after, .tree li:only-child::before {
 	display: none;
@@ -54,7 +56,7 @@
 	border: 0 none;
 }
 .tree li:last-child::before {
-	border-right: 1px solid #ccc;
+	border-right: 1px solid black;
 	border-radius: 0 5px 0 0;
 	-webkit-border-radius: 0 5px 0 0;
 	-moz-border-radius: 0 5px 0 0;
@@ -69,35 +71,32 @@
 	position: absolute;
 	top: 0;
 	left: 50%;
-	border-left: 1px solid #ccc;
+	border-left: 1px solid black;
 	width: 0;
 	height: 20px;
 }
 .tree li a {
-	border: 1px solid #ccc;
+	border: 1px solid black;
 	padding: 10px;
 	display: inline-grid;
 	border-radius: 5px;
 	text-decoration-line: none;
 	border-radius: 5px;
 	transition: .5s;
-}
-.tree li a img {
-	width: 50px;
-	height: 50px;
-	margin-bottom: 10px !important;
-	border-radius: 100px;
-	margin: auto;
+	
+	background-color: blanchedalmond; /*Background kotak*/
 }
 .tree li a span {
-	border: 1px solid #ccc;
+	border: 1px solid black;
 	border-radius: 5px;
-	color: #666;
+	color: black;
 	padding: 8px;
 	font-size: 12px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
 	font-weight: 500;
+	
+	/* background-color: blanchedalmond; */
 }
 /*Hover-Section*/
 .tree li a:hover, .tree li a:hover i, .tree li a:hover span, .tree li a:hover+ul li a {
