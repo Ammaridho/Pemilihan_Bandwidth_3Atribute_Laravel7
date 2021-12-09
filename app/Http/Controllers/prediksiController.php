@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\homeController;
 
+use App\Models\hasilDecisiontree;
+
 class prediksiController extends Controller
 {
     public function prosesCek(Request $request)
@@ -99,16 +101,13 @@ class prediksiController extends Controller
             // dd($bandwidth .' '. $jumlahPenghuni .' '. $jumlahGadget .' '. $totalRange);
 
         // 2. lakukan prediksi
-            $DecisionData = app('App\Http\Controllers\homeController')->CreateTree();
-            
-            $akar                    = $DecisionData['akar'];
-            $arrayNamaBagianAttribut = $DecisionData['arrayNamaBagianAttribut'];
+            // $DecisionData = app('App\Http\Controllers\perhitunganController')->CreateTree();
+
+            $DecisionData = hasilDecisiontree::first();
+            $akar = unserialize($DecisionData->serializeAkar);
+            $arrayNamaBagianAttribut = unserialize($DecisionData->serializeArrayNamaBagianAttribut);
             
             //proses pengecekan data
-            
-            // dd($akar);
-
-            // $akar[$i];
 
             $i = 1;
 
@@ -142,7 +141,7 @@ class prediksiController extends Controller
 
                 $i++;
 
-            }while($namaAkar == 'Bandwidth' || $namaAkar == 'Jumlah Penghuni' || $namaAkar == 'Jumlah Gadget' || $namaAkar == 'Range Penggunaan');
+            }while($namaAkar == 'Bandwidth' || $namaAkar == 'Jumlah Penghuni' || $namaAkar == 'Banyak Gadget' || $namaAkar == 'Range Penggunaan');
 
             $hasilPrediksi = $namaAkar;
 
