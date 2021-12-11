@@ -73,7 +73,6 @@ class perhitunganController extends Controller
 
     public function CreateTree()
     {
-        set_time_limit(300);
 
         //Itterasi ke 1 ==================================================================
         $itterasi[1] = $this->Algoritma(''); //array data awal (semua data)
@@ -146,14 +145,14 @@ class perhitunganController extends Controller
 
     public function hasilDecisiontree()
     {
-        set_time_limit(300);
+        set_time_limit(1000000000);
         $dataAlgoritma = $this->Algoritma('');
         $dataCreateTree = $this->CreateTree();
 
         $hasilDecisiontree = new hasilDecisiontree;
 
         //untuk table
-        $hasilDecisiontree->dataPatokan = serialize($dataAlgoritma['dataPatokan']);
+        // $hasilDecisiontree->dataPatokan = serialize($dataAlgoritma['dataPatokan']);
         $hasilDecisiontree->jmlKel      = $dataAlgoritma['jmlKel'];
         $hasilDecisiontree->jml         = serialize($dataAlgoritma['jml']);
         $hasilDecisiontree->totEntropykel = $dataAlgoritma['totEntropykel'];
@@ -163,6 +162,8 @@ class perhitunganController extends Controller
         $hasilDecisiontree->serializeArrayNamaBagianAttribut = serialize($dataCreateTree['arrayNamaBagianAttribut']);
         
         $hasilDecisiontree->save();
+
+        return redirect('/');
     }
 
     public function ChooseData($dataItterasi,$macamAtribut,$arrayNamaBagianAttribut)

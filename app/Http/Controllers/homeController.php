@@ -23,6 +23,5 @@ class homeController extends Controller
 
         return view('content.home',compact('jmlKel','jml','totEntropykel','hasil','akar'));
     }
-
   
 }

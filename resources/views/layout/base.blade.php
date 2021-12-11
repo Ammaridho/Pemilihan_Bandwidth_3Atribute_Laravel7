@@ -29,6 +29,9 @@
             <li class="nav-item">
               <a class="nav-link" href="">Input Data</a>
             </li>
+            <li>
+              <a class="nav-link" href="{{route('hasilDecisiontree')}}">Buat Ulang Tree</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="">About</a>
             </li>
