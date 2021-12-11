@@ -10,6 +10,8 @@ class detail_gadget extends Model
 
     public $timestamps = false;
 
+    protected $fillable = ['data_penghuni_id','namaGadget','range'];    
+
     public function data_penghuni()
     {
         return $this->belongsTo(data_penghuni::class);

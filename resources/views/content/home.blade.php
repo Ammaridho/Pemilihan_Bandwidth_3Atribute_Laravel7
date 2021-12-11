@@ -12,6 +12,22 @@
       <div class="row">
         <div class="col text-center">
           <h1>Semua Dataset</h1>
+
+          {{-- notifikasi form validasi --}}
+          @if ($errors->has('file'))
+          <span class="invalid-feedback" role="alert">
+            <strong>{{ $errors->first('file') }}</strong>
+          </span>
+          @endif
+
+          {{-- notifikasi sukses --}}
+          @if ($sukses = Session::get('sukses'))
+          <div class="alert alert-success alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $sukses }}</strong>
+          </div>
+          @endif
+          
         </div>
       </div>
 

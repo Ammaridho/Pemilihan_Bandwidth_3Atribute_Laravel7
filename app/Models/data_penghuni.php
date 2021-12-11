@@ -10,6 +10,8 @@ class data_penghuni extends Model
 
     public $timestamps = false;
 
+    protected $fillable = ['internet_keluarga_id','nama','banyakGadget'];    
+
     public function internet_keluarga()
     {
         return $this->belongsTo(internet_keluarga::class);

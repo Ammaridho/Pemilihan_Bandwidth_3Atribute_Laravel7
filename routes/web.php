@@ -22,6 +22,8 @@ Route::get('/','homeController@index')->name('home');
 
 Route::get('/hasilDecisiontree','perhitunganController@hasilDecisiontree')->name('hasilDecisiontree');
 
+//Import Export Excel
+Route::post('/importExcel','ImportExportExcelController@import_excel')->name('importExcel');
 
 // Pengecekan
 Route::post('/prediksi','prediksiController@prosesCek')->name('prosesCek');
