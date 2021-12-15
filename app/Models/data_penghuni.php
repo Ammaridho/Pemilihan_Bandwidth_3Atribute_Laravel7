@@ -10,7 +10,7 @@ class data_penghuni extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['internet_keluarga_id','nama','banyakGadget'];    
+    protected $fillable = ['id','internet_keluarga_id','nama','banyakGadget'];    
 
     public function internet_keluarga()
     {

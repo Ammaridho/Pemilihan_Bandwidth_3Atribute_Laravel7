@@ -143,8 +143,11 @@ class perhitunganController extends Controller
         return compact('itterasi','akar','arrayNamaBagianAttribut');
     }
 
-    public function hasilDecisiontree()
+    public function hasilDecisiontree(Request $request)
     {
+        
+		$namaData = session()->get( 'namaData' );
+        
         set_time_limit(1000000000);
         $dataAlgoritma = $this->Algoritma('');
         $dataCreateTree = $this->CreateTree();
@@ -161,9 +164,18 @@ class perhitunganController extends Controller
         $hasilDecisiontree->serializeAkar = serialize($dataCreateTree['akar']);
         $hasilDecisiontree->serializeArrayNamaBagianAttribut = serialize($dataCreateTree['arrayNamaBagianAttribut']);
         
+		$hasilDecisiontree->namaHasilDecisionTree = $namaData;
+        
         $hasilDecisiontree->save();
+        
+		// Empty database
+		foreach (internet_keluarga::all() as $e) { $e->delete(); }
 
-        return redirect('/');
+        //ambil id hasildecisiontree yang sudah diproses untuk menampilkan data di home
+        $data = hasilDecisiontree::latest()->first();
+        $idData = $data->id;
+
+        return redirect()->route('home')->with(['idData' => $idData]);;
     }
 
     public function ChooseData($dataItterasi,$macamAtribut,$arrayNamaBagianAttribut)
@@ -339,11 +351,10 @@ class perhitunganController extends Controller
             }
             $dataKe++;
         }while($dataMasuk < count($kesimpulanRange));
-        
-        //gunakan method find untuk mendapatkan data dari database
-        $dataRinganq = $dataPatokan->find($indexData['ringan']); 
-        $dataSedangq = $dataPatokan->find($indexData['sedang']); 
-        $dataBeratq  = $dataPatokan->find($indexData['berat']); 
+
+        $dataRinganq = isset($indexData['ringan']) ? $dataPatokan->find($indexData['ringan']) : []; 
+        $dataSedangq = isset($indexData['sedang']) ? $dataPatokan->find($indexData['sedang']) : []; 
+        $dataBeratq  = isset($indexData['berat'])  ? $dataPatokan->find($indexData['berat'])  : []; 
         
         return compact('dataPatokan','brendah','bsedang','btinggi','psedikit','pnormal','pbanyak','gsedikit','gsedang','gbanyak','dataRinganq','dataSedangq','dataBeratq');
     }

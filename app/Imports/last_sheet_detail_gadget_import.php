@@ -4,8 +4,9 @@ namespace App\Imports;
 
 use App\Models\detail_gadget;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class last_sheet_detail_gadget_import implements ToModel
+class last_sheet_detail_gadget_import implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -15,9 +16,10 @@ class last_sheet_detail_gadget_import implements ToModel
     public function model(array $row)
     {
         return new detail_gadget([
-            'data_penghuni_id'  => $row[1],
-            'namaGadget'        => $row[2],
-            'range'             => $row[3]
+            'id'            => $row['id'],
+            'data_penghuni_id'  => $row['data_penghuni_id'],
+            'namaGadget'        => $row['namagadget'],
+            'range'             => $row['range']
         ]);
     }
 }

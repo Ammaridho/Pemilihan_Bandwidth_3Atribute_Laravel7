@@ -8,7 +8,8 @@ class internet_keluarga extends Model
 {
     protected $table = 'internet_keluarga';
 
-    protected $fillable = ['namaKeluarga'  ,
+    protected $fillable = ['id',
+                            'namaKeluarga',
                             'noTelp',
                             'provider',
                             'bandwidth',

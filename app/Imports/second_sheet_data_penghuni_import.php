@@ -4,8 +4,9 @@ namespace App\Imports;
 
 use App\Models\data_penghuni;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class second_sheet_data_penghuni_import implements ToModel
+class second_sheet_data_penghuni_import implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -14,10 +15,12 @@ class second_sheet_data_penghuni_import implements ToModel
     */
     public function model(array $row)
     {
+        // dd($row);
         return new data_penghuni([
-            'internet_keluarga_id'  => $row[1],
-            'nama'                  => $row[2],
-            'banyakGadget'          => $row[3]
+            'id'                    => $row['id'],
+            'internet_keluarga_id'  => $row['internet_keluarga_id'],
+            'nama'                  => $row['nama'],
+            'banyakGadget'          => $row['banyakgadget']
         ]);
     }
 }

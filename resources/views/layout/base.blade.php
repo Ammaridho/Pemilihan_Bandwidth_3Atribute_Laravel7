@@ -41,18 +41,23 @@
     <!-- Import Excel -->
 		<div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
+
 				<form method="post" action="/importExcel" enctype="multipart/form-data">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Import Data Excel</h5>
+							<h5 class="modal-title text-center" id="exampleModalLabel">Import Data Excel</h5>
 						</div>
 						<div class="modal-body">
 
 							{{ csrf_field() }}
+              <label for="namaData">Nama data</label>
+              <div class="form-group">
+                <input type="text" name="namaData" id="namaData" required>
+              </div>
 
-							<label>Pilih file excel</label>
+							<label for="fileExcel">Pilih file excel</label>
 							<div class="form-group">
-								<input type="file" name="file" required="required">
+								<input type="file" name="file" id="fileExcel" required="required">
 							</div>
 
 						</div>
@@ -62,6 +67,7 @@
 						</div>
 					</div>
 				</form>
+        
 			</div>
 		</div>
     

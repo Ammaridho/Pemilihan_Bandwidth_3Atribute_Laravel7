@@ -10,6 +10,12 @@
     <div class="container mt-5">
 
       <div class="row">
+        <div class="col">
+          <h1>Data : {{$namaData}}</h1>
+        </div>
+      </div>
+
+      <div class="row">
         <div class="col text-center">
           <h1>Semua Dataset</h1>
 
@@ -145,6 +151,8 @@
                   <form action="{{route('prosesCek')}}" method="POST" name="prediksi" id="form">
 
                       @csrf
+                      
+                      <input type="text" name="namaData" value="{{$idData}}" hidden>
             
                       <div class="row">
                         <div class="col text-center">
