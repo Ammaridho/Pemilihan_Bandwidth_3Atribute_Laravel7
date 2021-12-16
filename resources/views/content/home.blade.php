@@ -152,7 +152,7 @@
 
                       @csrf
                       
-                      <input type="text" name="namaData" value="{{$idData}}" hidden>
+                      <input type="text" name="idData" value="{{$idData}}" hidden>
             
                       <div class="row">
                         <div class="col text-center">

@@ -37,11 +37,12 @@ class ImportExportExcelController extends Controller
 		Excel::import(new internet_keluarga_import, public_path('/file_Excel/'.$nama_file));
 
 		$namaData = $request->namaData;
+		$deskripsiData = $request->deskripsiData;
 
 		// notifikasi dengan session
 		Session::flash('sukses','Data Siswa Berhasil Diimport!');
 
 		// alihkan halaman kembali
-		return redirect()->route('hasilDecisiontree')->with(['namaData' => $namaData]);
+		return redirect()->route('hasilDecisiontree')->with(['namaData' => $namaData, 'deskripsiData' => $deskripsiData]);
 	}
 }

@@ -103,7 +103,9 @@ class prediksiController extends Controller
         // 2. lakukan prediksi
             // $DecisionData = app('App\Http\Controllers\perhitunganController')->CreateTree();
 
-            $DecisionData = hasilDecisiontree::find($request->namaData);                
+            $idData = $request->idData;
+
+            $DecisionData = hasilDecisiontree::find($idData);                
             $akar = unserialize($DecisionData->serializeAkar);
             $arrayNamaBagianAttribut = unserialize($DecisionData->serializeArrayNamaBagianAttribut);
             
@@ -145,6 +147,8 @@ class prediksiController extends Controller
 
             $hasilPrediksi = $namaAkar;
 
-            return view('content.hasilPrediksi', compact('hasilPrediksi')); 
+            $semuaData = hasilDecisiontree::orderBy('created_at', 'desc')->get();
+
+            return view('content.hasilPrediksi', compact('semuaData','idData','hasilPrediksi')); 
     }
 }

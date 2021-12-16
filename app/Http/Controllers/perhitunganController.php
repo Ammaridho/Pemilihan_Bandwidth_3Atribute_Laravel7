@@ -147,6 +147,7 @@ class perhitunganController extends Controller
     {
         
 		$namaData = session()->get( 'namaData' );
+        $deskripsiData = session()->get( 'deskripsiData' );
         
         set_time_limit(1000000000);
         $dataAlgoritma = $this->Algoritma('');
@@ -165,17 +166,13 @@ class perhitunganController extends Controller
         $hasilDecisiontree->serializeArrayNamaBagianAttribut = serialize($dataCreateTree['arrayNamaBagianAttribut']);
         
 		$hasilDecisiontree->namaHasilDecisionTree = $namaData;
-        
+        $hasilDecisiontree->deskripsi = $deskripsiData;
         $hasilDecisiontree->save();
         
 		// Empty database
 		foreach (internet_keluarga::all() as $e) { $e->delete(); }
 
-        //ambil id hasildecisiontree yang sudah diproses untuk menampilkan data di home
-        $data = hasilDecisiontree::latest()->first();
-        $idData = $data->id;
-
-        return redirect()->route('home')->with(['idData' => $idData]);;
+        return redirect('/');
     }
 
     public function ChooseData($dataItterasi,$macamAtribut,$arrayNamaBagianAttribut)

@@ -6,12 +6,10 @@
 	color: black;
 }
 
-/* body {
-	height: 100vh;
-	display: grid;
-	align-items: center;
-	font-family: 'Poppins', sans-serif;
-} */
+.list-group.listHasilDecisionTree{
+	height: 430px;
+	overflow-y:scroll;
+}
 
 .tree {
 	width: 100%;

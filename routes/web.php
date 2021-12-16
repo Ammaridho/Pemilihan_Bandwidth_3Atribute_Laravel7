@@ -22,6 +22,9 @@ Route::get('/','homeController@index')->name('home');
 
 Route::get('/hasilDecisiontree','perhitunganController@hasilDecisiontree')->name('hasilDecisiontree');
 
+// Search
+Route::get('/search','homeContoller@search')->name('search');
+
 //Import Export Excel
 Route::post('/importExcel','ImportExportExcelController@import_excel')->name('importExcel');
 
