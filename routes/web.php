@@ -20,16 +20,13 @@ use Illuminate\Support\Facades\Route;
 // Utama
 Route::get('/','homeController@index')->name('home');
 
-Route::get('/hasilDecisiontree','perhitunganController@hasilDecisiontree')->name('hasilDecisiontree');
+// signup
+Route::post('/signup','authController@signup')->name('signup');
 
-// Search
-Route::get('/search','homeContoller@search')->name('search');
+// signin
+Route::post('/signin','authController@signin')->name('signin');
 
-//Import Export Excel
-Route::post('/importExcel','ImportExportExcelController@import_excel')->name('importExcel');
 
-// Pengecekan
-Route::post('/prediksi','prediksiController@prosesCek')->name('prosesCek');
 
 
 //Testing Bagan
@@ -38,7 +35,30 @@ Route::get('/treeDiagramTest','homeController@treeDiagramTest')->name('treeDiagr
 Route::get('/resultTree','homeController@resultTree')->name('resultTree');
 
 
-// Form Tambahan
-Route::get('/penghuni','penggunaanController@penghuni')->name('penghuni');
 
-Route::get('/penggunaangadget','penggunaanController@gadget')->name('gadget');
+
+Route::group(['middleware' => 'ceksession'], function(){
+
+    //lihat hasil decision tree
+    Route::get('/hasilDecisiontree','perhitunganController@hasilDecisiontree')->name('hasilDecisiontree');
+    
+    // Search
+    Route::get('/search','homeContoller@search')->name('search');
+    
+    // Hapus Hasil Decision Tree
+    Route::delete('/hapusHasilDecisionTree/{id}','homeController@hapusHasilDecisiontree')->name('hapusHasilDecisionTree');
+    
+    //Import Export Excel
+    Route::post('/importExcel','ImportExportExcelController@import_excel')->name('importExcel');
+    
+    // Pengecekan
+    Route::post('/prediksi','prediksiController@prosesCek')->name('prosesCek');
+    
+    // Form Tambahan
+    Route::get('/penghuni','penggunaanController@penghuni')->name('penghuni');
+    
+    Route::get('/penggunaangadget','penggunaanController@gadget')->name('gadget');
+
+    // signout
+    Route::get('/signout','authController@signout')->name('signout');
+});

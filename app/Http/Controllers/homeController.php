@@ -42,5 +42,14 @@ class homeController extends Controller
 
         $request->searchHasilDecisionTree;
     }
+
+    public function hapusHasilDecisiontree(Request $request)
+    {
+
+        // dd($request);
+        hasilDecisiontree::find($request->id)->delete();
+
+        return redirect('/')->with('message','Berhasil menghapus hasil decision tree');
+    }
   
 }

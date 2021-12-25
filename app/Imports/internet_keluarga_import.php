@@ -14,7 +14,7 @@ class internet_keluarga_import implements WithMultipleSheets
         return [
             'internet_keluarga' => new first_sheet_internet_keluarga_import(),  // Untuk sheet pertama benar
             'data_penghuni'     => new second_sheet_data_penghuni_import(),  // Sheet ke 2 masi salah
-            'detail_gadget'     =>new last_sheet_detail_gadget_import()
+            'detail_gadget'     => new last_sheet_detail_gadget_import()
         ];
     }
 
