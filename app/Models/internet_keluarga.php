@@ -8,6 +8,8 @@ class internet_keluarga extends Model
 {
     protected $table = 'internet_keluarga';
 
+    public $timestamps = false;
+
     protected $fillable = ['id',
                             'namaKeluarga',
                             'noTelp',

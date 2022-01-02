@@ -8,6 +8,8 @@ use App\Models\User;
 
 use Illuminate\Support\Str;
 
+use Session;
+
 class authController extends Controller
 {
     public function signup(Request $request)
@@ -27,7 +29,9 @@ class authController extends Controller
         if($data){
             if(\Hash::check($request->password, $data->password)){
                 session(['session_login' => true]);
-                $request->session()->put('data',$request->input());
+                $request->session()->put('data',$request->input());   //memasikkan inputan dari form login ke dalam data session
+                Session::put('user_id', $data['id']);
+
                 return redirect('/')->with(['success' => 'Berhasil Masuk!']);
             }
         }

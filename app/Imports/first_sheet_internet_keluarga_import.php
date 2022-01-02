@@ -8,11 +8,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class first_sheet_internet_keluarga_import implements ToModel, WithHeadingRow
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
     public function model(array $row)
     {
         return new internet_keluarga([

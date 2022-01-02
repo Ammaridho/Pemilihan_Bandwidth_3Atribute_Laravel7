@@ -17,15 +17,4 @@ class internet_keluarga_import implements WithMultipleSheets
             'detail_gadget'     => new last_sheet_detail_gadget_import()
         ];
     }
-
-    // use WithConditionalSheets;
-
-    // public function conditionalSheets(): array
-    // {
-    //     return [
-    //         'Sheet1' => new first_sheet_internet_keluarga_import(),
-    //         'Sheet2' => new second_sheet_data_penghuni_import(),
-    //         'Sheet3' => new last_sheet_detail_gadget_import()
-    //     ];
-    // }
 }

@@ -16,8 +16,13 @@ class ImportExportExcelController extends Controller
 {
     public function import_excel(Request $request) 
 	{
+		set_time_limit(1000000000);
 		// Empty database
-		foreach (internet_keluarga::all() as $e) { $e->delete(); }		
+		// foreach (internet_keluarga::all() as $e) { $e->delete(); }		
+
+		internet_keluarga::query()->delete();
+
+		// dd('tahan');
 
 		// validasi
 		$this->validate($request, [

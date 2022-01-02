@@ -25,10 +25,10 @@
           @if (session('session_login'))
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="btn nav-link" data-toggle="modal" data-target="#modalHasilPrediksi" id="testtt">List Hasil Prediksi</a>
+              <a class="btn nav-link" data-toggle="modal" data-target="#modalHasilPrediksi" id="testtt">List Hasil Pola Prediksi</a>
             </li>
             <li class="nav-item">
-              <a class="btn nav-link" data-toggle="modal" data-target="#importExcel">Import Data Excel</a>
+              <a class="btn nav-link" data-toggle="modal" data-target="#importExcel">Buat Pola Prediksi</a>
             </li>
             <li class="nav-item">
               <a class="btn nav-link" data-toggle="modal" data-target="#tentangWebsite">Tentang Website</a>
@@ -42,7 +42,7 @@
                 @else
                 <div class="dropdown nav-item">
                   <a id="buttonKeranjang" class="btn dropdown-toggle" href="#" role="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Namaa
+                    {{(session('data')['username'])}}
                   </a>
                 
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -134,132 +134,138 @@
 			</div>
 		</div>
 
-    <!-- Import Excel -->
-		<div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-sm" role="document">
+    @if (session('session_login'))
+      <!-- Import Excel -->
+      <div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
 
-				<form method="post" action="/importExcel" enctype="multipart/form-data">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title text-center" id="exampleModalLabel">Import Data Excel</h5>
-						</div>
-						<div class="modal-body">
-
-							{{ csrf_field() }}
-              <label for="namaData">Nama data</label>
-              <div class="form-group">
-                <input type="text" name="namaData" id="namaData" required>
+          <form method="post" action="/importExcel" enctype="multipart/form-data">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Import Data Excel</h5>
               </div>
+              <div class="modal-body">
 
-              <label for="deskripsiData">Deskripsi</label>
-              <div class="form-group">
-                <textarea name="deskripsiData" id="deskripsiData" cols="30" rows="10"></textarea>
+                {{ csrf_field() }}
+                <label for="namaData">Nama data</label>
+                <div class="form-group">
+                  <input type="text" name="namaData" id="namaData" required>
+                </div>
+
+                <label for="deskripsiData">Deskripsi</label>
+                <div class="form-group">
+                  <textarea name="deskripsiData" id="deskripsiData" cols="30" rows="10"></textarea>
+                </div>
+
+                <label for="fileExcel">Pilih file excel</label>
+                <div class="form-group">
+                  <input type="file" name="file" id="fileExcel" required="required">
+                </div>
+
               </div>
-
-							<label for="fileExcel">Pilih file excel</label>
-							<div class="form-group">
-								<input type="file" name="file" id="fileExcel" required="required">
-							</div>
-
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary">Import</button>
-						</div>
-					</div>
-				</form>
-        
-			</div>
-		</div>
-
-    <!-- modalHasilPrediksi -->
-		<div class="modal fade" id="modalHasilPrediksi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <h5 class="modal-title">List Hasil Prediksi Decision Tree</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-
-            {{-- Form Search --}}
-            <div class="searchHasilDecisionTree mb-3">
-              <label for="textSearchHasilDecisionTree">Cari :</label>
-              <input id="textSearchHasilDecisionTree" type="text" name="searchHasilDecisionTree">
-              {{-- <button class="buttonSubmitSearchHasilDecisionTree" type="submit">Cari</button> --}}
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Import</button>
+              </div>
             </div>
-
-            <div class="list-group listHasilDecisionTree" id="listHasilDecisionTree">
-              @foreach ($semuaData as $item)
-                <a href="{{ route('home', ['idData' => $item['id']]) }}" class="list-group-item list-group-item-action" id="buttonIsiListHasilDecisionTree">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{$item['namaHasilDecisionTree']}}</h5>
-                    {{-- button hapus --}}
-                    <form action="/hapusHasilDecisionTree/{{$item['id']}}"  method="post" style="float: right">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm" onclick="return confirm('Yakin mau hapus?')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                        </svg></button>
-                    </form>
-                  </div>
-                  <p class="mb-1">Jumlah Data : {{$item['jmlKel']}}</p>
-                  <small class="text-muted">{{$item['deskripsi']}}</small>
-                </a>
-              @endforeach
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+          </form>
           
         </div>
+      </div>
 
-			</div>
-		</div>
-    
-    <!-- tentangWebsite -->
-		<div class="modal fade" id="tentangWebsite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-xl" role="document">
+      <!-- modalHasilPrediksi -->
+      <div class="modal fade" id="modalHasilPrediksi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
 
-        <div class="modal-content">
+          <div class="modal-content">
 
-          <div class="modal-header">
-            <h5 class="modal-title">List Hasil Prediksi Decision Tree</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <div class="modal-header">
+              <h5 class="modal-title">List Hasil Prediksi Decision Tree</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+
+              {{-- Form Search --}}
+              <div class="searchHasilDecisionTree mb-3">
+                <label for="textSearchHasilDecisionTree">Cari :</label>
+                <input id="textSearchHasilDecisionTree" type="text" name="searchHasilDecisionTree">
+              </div>
+              
+              @if (isset($semuaData))
+                <div class="list-group listHasilDecisionTree" id="listHasilDecisionTree">
+                  @foreach ($semuaData as $item)
+                    <a href="{{ route('home', ['idData' => $item['id']]) }}" class="list-group-item list-group-item-action" id="buttonIsiListHasilDecisionTree">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{$item['namaHasilDecisionTree']}}</h5>
+                        {{-- button hapus --}}
+                        <form action="/hapusHasilDecisionTree/{{$item['id']}}"  method="post" style="float: right">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm" onclick="return confirm('Yakin mau hapus?')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg></button>
+                        </form>
+                      </div>
+                      <p class="mb-1">Jumlah Data : {{$item['jmlKel']}}</p>
+                      <small class="text-muted">{{$item['deskripsi']}}</small>
+                    </a>
+                  @endforeach
+                </div>
+              @else
+                  <p class="text-center">Kosong, silahkan buat pola prediksi</p>
+              @endif
+
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            
           </div>
 
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-sm-3 p-4">
-                  <img src="img/fotocv.png" class="img-thumbnail">
-              </div>
-              <div class="col-sm-9 p-5">
-                  <p class="text-justify">Assalamualaikum, Wr. Wb. 
-                    <br><br>
-                    Perkenalkan nama saya Ammaridho, 
-                    <br><br>
-                    saya adalah mahasiswa prodi Teknik Informatika angkatan 2018, Fakultas Sains dan Teknologi, UIN Syarif Hidayatullah Jakarta.
-                    <br><br>
-                    Saat ini saya sedang melakukan penelitian dalam rangka penyelesaiian Tugas Akhir Skripsi yang berjudul "Pemilihan Bandwidth Internet Rumahan Dengan Metode Algoritma Decision Tree C4.5".
-                    <br><br>
-                    Saya ucapkan terimakasih kepada saudara/i atas ketersediaannya mengisi survey ini, data yang diambil hanya akan digunakan untuk penelitian saya dan tidak akan disebarluaskan.</p>
+        </div>
+      </div>
+      
+      <!-- tentangWebsite -->
+      <div class="modal fade" id="tentangWebsite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">List Hasil Prediksi Decision Tree</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-sm-3 p-4">
+                    <img src="img/fotocv.png" class="img-thumbnail">
+                </div>
+                <div class="col-sm-9 p-5">
+                    <p class="text-justify">Assalamualaikum, Wr. Wb. 
+                      <br><br>
+                      Perkenalkan nama saya Ammaridho, 
+                      <br><br>
+                      saya adalah mahasiswa prodi Teknik Informatika angkatan 2018, Fakultas Sains dan Teknologi, UIN Syarif Hidayatullah Jakarta.
+                      <br><br>
+                      Saya sedang melakukan penelitian dalam rangka penyelesaiian Tugas Akhir Skripsi yang berjudul "Pemilihan Bandwidth Internet Rumahan Dengan Metode Algoritma Decision Tree C4.5".
+                      <br><br>
+                      Saya ucapkan terimakasih kepada saudara/i atas ketersediaannya mengisi survey ini, data yang diambil hanya akan digunakan untuk penelitian saya dan tidak akan disebarluaskan.</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-			</div>
-		</div>
+        </div>
+      </div>
+    @endif
 
     @yield('content')
 

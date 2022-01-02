@@ -52,7 +52,7 @@ Route::group(['middleware' => 'ceksession'], function(){
     Route::post('/importExcel','ImportExportExcelController@import_excel')->name('importExcel');
     
     // Pengecekan
-    Route::post('/prediksi','prediksiController@prosesCek')->name('prosesCek');
+    Route::get('/prediksi','prediksiController@prosesCek')->name('prosesCek');
     
     // Form Tambahan
     Route::get('/penghuni','penggunaanController@penghuni')->name('penghuni');

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Session;
 
-use App\Http\Controllers\homeController;
+use Illuminate\Http\Request;
 
 use App\Models\hasilDecisiontree;
 
@@ -147,8 +147,9 @@ class prediksiController extends Controller
 
             $hasilPrediksi = $namaAkar;
 
-            $semuaData = hasilDecisiontree::orderBy('created_at', 'desc')->get();
+            // return redirect()->route('home')->with(['idData' => $idData]);
 
-            return view('content.hasilPrediksi', compact('semuaData','idData','hasilPrediksi')); 
+            // dd($hasilPrediksi);
+            return redirect()->route( 'home' )->with( [ 'idData' => $idData, 'hasilPrediksi' => $hasilPrediksi ] );
     }
 }

@@ -16,7 +16,7 @@ class last_sheet_detail_gadget_import implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         return new detail_gadget([
-            'id'            => $row['id'],
+            'id'                => $row['id'],
             'data_penghuni_id'  => $row['data_penghuni_id'],
             'namaGadget'        => $row['namagadget'],
             'range'             => $row['range']

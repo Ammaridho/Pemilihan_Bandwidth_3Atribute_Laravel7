@@ -9,6 +9,8 @@ use App\Models\detail_gadget;
 use App\Models\internet_keluarga;
 use App\Models\hasilDecisiontree;
 
+use Session;
+
 class perhitunganController extends Controller
 {
     public function treeDiagramTest()
@@ -37,7 +39,7 @@ class perhitunganController extends Controller
 
             $kurang  = $itterasi['jml'][0];
 
-            $cukup = $itterasi['jml'][1];
+            $cukup  = $itterasi['jml'][1];
 
             $lebih  = $itterasi['jml'][2];
 
@@ -59,9 +61,9 @@ class perhitunganController extends Controller
                     $macam = 'Lebih';
                 }
 
-                $macamAtribut = $macam . ' ' . $persentase . '%';
+                $macamAtribut = $macam . ' ' . round($persentase,2) . '%';
             }else{
-                $macamAtribut = 'Kosong';
+                $macamAtribut = 'Tidak Ada';
             }
 
             $arrayNamaBagianAttribut = [];
@@ -143,6 +145,18 @@ class perhitunganController extends Controller
         return compact('itterasi','akar','arrayNamaBagianAttribut');
     }
 
+    public function paketTerbaik()
+    {
+        // PAket Data Rendah terbaik
+        $paketDataRendah = internet_keluarga::where('bandwidth','<=',20)->sortBy("biayaBulanan");
+
+        // Paket Data Sedang Terbaik
+        $paketDataSedang = internet_keluarga::where('bandwidth','<=',40)->where('bandwidth','>',20)->sortBy("biayaBulanan");
+
+        // Paket Data Tinggi Terbaik
+        $paketDataTinggi = internet_keluarga::where('bandwidth','>',40)->sortBy("biayaBulanan");
+    }
+
     public function hasilDecisiontree(Request $request)
     {
         
@@ -156,17 +170,19 @@ class perhitunganController extends Controller
         $hasilDecisiontree = new hasilDecisiontree;
 
         //untuk table
-        // $hasilDecisiontree->dataPatokan = serialize($dataAlgoritma['dataPatokan']);
-        $hasilDecisiontree->jmlKel      = $dataAlgoritma['jmlKel'];
-        $hasilDecisiontree->jml         = serialize($dataAlgoritma['jml']);
-        $hasilDecisiontree->totEntropykel = $dataAlgoritma['totEntropykel'];
-        $hasilDecisiontree->hasil       = serialize($dataAlgoritma['hasil']);
+        $hasilDecisiontree->jmlKel          = $dataAlgoritma['jmlKel'];
+        $hasilDecisiontree->jml             = serialize($dataAlgoritma['jml']);
+        $hasilDecisiontree->totEntropykel   = $dataAlgoritma['totEntropykel'];
+        $hasilDecisiontree->hasil           = serialize($dataAlgoritma['hasil']);
         //untuk bagan
         $hasilDecisiontree->serializeAkar = serialize($dataCreateTree['akar']);
         $hasilDecisiontree->serializeArrayNamaBagianAttribut = serialize($dataCreateTree['arrayNamaBagianAttribut']);
         
 		$hasilDecisiontree->namaHasilDecisionTree = $namaData;
         $hasilDecisiontree->deskripsi = $deskripsiData;
+
+        $hasilDecisiontree->user_id = Session::get('user_id');;   //Tangkap id user dengan session
+        
         $hasilDecisiontree->save();
         
 		// Empty database
@@ -271,33 +287,17 @@ class perhitunganController extends Controller
         $banyakData = 0;
         do{
             if(internet_keluarga::find($keluargaKe)){       //Ambil semua data
-                
-                // Sorting data
-                $ringan = internet_keluarga::
-                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                select('internet_keluarga.id','detail_gadget.range')->
-                where('range','ringan')->
-                where('internet_keluarga.id',$keluargaKe)->
-                get();
 
-                $sedang = internet_keluarga::
+                $datainternetkeluarga = internet_keluarga::
                 join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
                 join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
                 select('internet_keluarga.id','detail_gadget.range')->
-                where('range','sedang')->
-                where('internet_keluarga.id',$keluargaKe)->
-                get();
+                where('internet_keluarga.id',$keluargaKe)->get();
 
-                $berat  = internet_keluarga::
-                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                select('internet_keluarga.id','detail_gadget.range')->
-                where('range','berat')->
-                where('internet_keluarga.id',$keluargaKe)->
-                get();
-                
-                
+                $sedang = $datainternetkeluarga->where('range','sedang');
+                $ringan = $datainternetkeluarga->where('range','ringan');
+                $berat  = $datainternetkeluarga->where('range','berat');
+
                 // Jumlah mentah gadget
                 $mentahValue[$keluargaKe][0] = count($ringan);
                 $mentahValue[$keluargaKe][1] = count($sedang);
@@ -514,29 +514,16 @@ class perhitunganController extends Controller
                     $banyakData += 1;
 
                     // Sorting
-                    $ringan = internet_keluarga::
-                                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                                select('internet_keluarga.id','detail_gadget.range')->
-                                where('range','ringan')->
-                                where('internet_keluarga.id',$keluargaKe)->
-                                get();
-                    $sedang = internet_keluarga::
-                                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                                select('internet_keluarga.id','detail_gadget.range')->
-                                where('range','sedang')->
-                                where('internet_keluarga.id',$keluargaKe)->
-                                get();
-                    $berat  = internet_keluarga::
-                                join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
-                                join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
-                                select('internet_keluarga.id','detail_gadget.range')->
-                                where('range','berat')->
-                                where('internet_keluarga.id',$keluargaKe)->
-                                get();
+                    $datainternetkeluarga = internet_keluarga::
+                                            join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->
+                                            join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->
+                                            select('internet_keluarga.id','detail_gadget.range')->
+                                            where('internet_keluarga.id',$keluargaKe)->get();
 
-                    
+                    $sedang = $datainternetkeluarga->where('range','sedang');
+                    $ringan = $datainternetkeluarga->where('range','ringan');
+                    $berat  = $datainternetkeluarga->where('range','berat');
+
                     // Jumlah mentah gadget
                     $mentahValue[$keluargaKe][0] = count($ringan);
                     $mentahValue[$keluargaKe][1] = count($sedang);
