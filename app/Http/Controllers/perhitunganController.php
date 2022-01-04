@@ -9,6 +9,8 @@ use App\Models\detail_gadget;
 use App\Models\internet_keluarga;
 use App\Models\hasilDecisiontree;
 
+use App\Models\best_provider;
+
 use Session;
 
 class perhitunganController extends Controller
@@ -184,11 +186,76 @@ class perhitunganController extends Controller
         $hasilDecisiontree->user_id = Session::get('user_id');;   //Tangkap id user dengan session
         
         $hasilDecisiontree->save();
+
+        $this->bestProvider($hasilDecisiontree);      //ambil provider terbaik buat list
         
 		// Empty database
 		foreach (internet_keluarga::all() as $e) { $e->delete(); }
 
         return redirect('/');
+    }
+
+    public function bestProvider($hasilDecisiontree)
+    {
+        // ambil semua data, di pisah berdasar kategari
+            $pbrendah = internet_keluarga::where('bandwidth','<=',20)->get();
+            $pbsedang = internet_keluarga::where('bandwidth','<=',40)->where('bandwidth','>',20)->get();
+            $pbtinggi = internet_keluarga::where('bandwidth','>',40)->get();
+
+        //rendah terbaik
+
+            $providerTerbaik[0] = $this->tigaTerbaik($pbrendah);
+
+        //sedang terbaik
+
+            $providerTerbaik[1] = $this->tigaTerbaik($pbsedang);
+
+        //tinggi terbaik
+            
+            $providerTerbaik[2] = $this->tigaTerbaik($pbtinggi);
+
+        // dd($providerTerbaik);
+
+        // dd('asda');
+
+        //insert kedalam database
+            for ($i=0; $i < count($providerTerbaik); $i++) { 
+                for ($j=0; $j < count($providerTerbaik[$i]); $j++) { 
+                    $best_provider = new best_provider;
+                    $best_provider->namaprovider    = $providerTerbaik[$i][$j]['provider'];
+                    
+                    if ($i == 1) {
+                        $best_provider->kategori = 'sedang';
+                    } else if($i == 2){
+                        $best_provider->kategori = 'tinggi';
+                    }else {
+                        $best_provider->kategori = 'rendah';
+                    }
+                    
+                    $best_provider->bandwidth       = $providerTerbaik[$i][$j]['bandwidth'];
+                    $best_provider->harga           = $providerTerbaik[$i][$j]['biayaBulanan'];
+                    $best_provider->hasilDecisiontree()->associate($hasilDecisiontree);
+                    $best_provider->save();
+                }
+            }
+
+    }
+
+    public function tigaTerbaik($dpb)
+    {
+        foreach ($dpb as $key => $value) {
+            $a[$value['id']] = [$value['biayaBulanan'] / $value['bandwidth'], $value['id']];
+        }
+
+        arsort($a); //sort value tapi index tetap sesuai sebelumnya
+
+        $best3 = array_slice($a,0,3); //ambil 3 terbaik
+
+        for ($i=0; $i < 3; $i++) { 
+            $bestdpb[$i] = internet_keluarga::where('id',$best3[$i][1])->first();
+        }
+
+        return $bestdpb;
     }
 
     public function ChooseData($dataItterasi,$macamAtribut,$arrayNamaBagianAttribut)

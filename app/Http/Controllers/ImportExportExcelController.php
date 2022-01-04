@@ -45,7 +45,7 @@ class ImportExportExcelController extends Controller
 		$deskripsiData = $request->deskripsiData;
 
 		// notifikasi dengan session
-		Session::flash('sukses','Data Siswa Berhasil Diimport!');
+		// Session::flash('sukses','Data Siswa Berhasil Diimport!');
 
 		// alihkan halaman kembali
 		return redirect()->route('hasilDecisiontree')->with(['namaData' => $namaData, 'deskripsiData' => $deskripsiData]);

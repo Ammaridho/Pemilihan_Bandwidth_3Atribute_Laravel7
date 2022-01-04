@@ -9,6 +9,7 @@ use App\Models\detail_gadget;
 use App\Models\internet_keluarga;
 use App\Models\hasilDecisiontree;
 use App\Models\User;
+use App\Models\best_provider;
 
 use session;
 
@@ -57,8 +58,10 @@ class homeController extends Controller
                 // dd(session()->get('hasilPrediksi'));
     
                 $semuaData = hasilDecisiontree::where('user_id',$idAkunLogin)->orderBy('created_at', 'desc')->get();
-    
-                return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi'));
+
+                $best_provider = best_provider::where('hasildecisiontree_id',$idData)->get();
+
+                return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','best_provider'));
             }
 
 

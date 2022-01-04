@@ -22,19 +22,19 @@
         </button>
       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          @if (session('session_login'))
           <ul class="navbar-nav">
+            @if (session('session_login'))
             <li class="nav-item">
               <a class="btn nav-link" data-toggle="modal" data-target="#modalHasilPrediksi" id="testtt">List Hasil Pola Prediksi</a>
             </li>
             <li class="nav-item">
               <a class="btn nav-link" data-toggle="modal" data-target="#importExcel">Buat Pola Prediksi</a>
             </li>
+            @endif
             <li class="nav-item">
               <a class="btn nav-link" data-toggle="modal" data-target="#tentangWebsite">Tentang Website</a>
             </li>
           </ul>
-          @endif
             <div class="navbar-nav ml-auto">
               <li class="nav-item">
                 @if (!session('session_login'))
@@ -46,7 +46,7 @@
                   </a>
                 
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="btn tombol" onclick="signout()">Log Out</a>
+                    <a class="btn tombol" onclick="signout()">Sign Out</a>
                   </div>
                 </div>
                 @endif
@@ -230,6 +230,7 @@
         </div>
       </div>
       
+      @endif
       <!-- tentangWebsite -->
       <div class="modal fade" id="tentangWebsite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
@@ -265,8 +266,7 @@
 
         </div>
       </div>
-    @endif
-
+      
     @yield('content')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>

@@ -142,7 +142,7 @@
             
         </div>
         
-        <div class="container-fluid mt-3">
+        <div class="container-fluid mt-4">
           <div class="row pt-5" style="background-color: #b7b7a4">
             <div class="col-12 text-center">
               <h1>Tree Hasil C4.5</h1>
@@ -187,18 +187,48 @@
                 </div>
             </div>
           </div>
+
           <div class="row">
               <div class="col">
                   <div class="hasilPrediksi"></div>
               </div>
           </div>
-          @if (isset($hasilPrediksi)) 
-            <div class="row">
-              <div class="col m-3">
-                <h1 class="text-center">{{$hasilPrediksi}}</h1>
-              </div>
+        </div>
+
+        <div class="container mt-4">
+          <div class="row">
+            <div class="col">
+              <h1 class="text-center">Top Provider Terbaik</h1>
             </div>
-          @endif
+          </div>
+          <div class="row mt-4">
+            @foreach ($best_provider as $item)
+              <div class="col-4 p-2 d-flex justify-content-center text-center">
+                <div class="card" style="width: 18rem; height:18rem;">
+                  <div class="row" style="height: 70%">
+                    <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 200px;" alt="...">
+                  </div>
+                  <div class="row">
+                    <div class="card-body">
+                      <h5 class="card-title">{{$item['namaprovider']}}</h5>
+                      <div class="row">
+                        <div class="col">
+                          <p class="card-text">{{$item['bandwidth']}} Mbps</p>
+                        </div>
+                        <div class="col">
+                          <p class="card-text">Rp. {{$item['harga']}},-</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            @endforeach
+            
+          </div>
+        </div>
+          
+        <div class="container-fluid mt-4">
           <div class="row mt-3 pt-5 pb-5 mb-3" style="background-color: #ffe8d6">
               <div class="col text-center">
                   <h1>Masukkan Data untuk diprediksi</h1>
@@ -292,6 +322,14 @@
                   </div>
               </div>
           </div>
+
+          @if (isset($hasilPrediksi)) 
+            <div class="row">
+              <div class="col m-3">
+                <h1 class="text-center">{{$hasilPrediksi}}</h1>
+              </div>
+            </div>
+          @endif
         </div>
       @endif
     @else
