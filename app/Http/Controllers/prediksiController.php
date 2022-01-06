@@ -12,9 +12,10 @@ class prediksiController extends Controller
 {
     public function prosesCek(Request $request)
     {
-        $bandwidth      = $request->bandwidth;
+        $idData = $request->idData;
+        $bandwidth      = 30;
         $jumlahPenghuni = $request->jumlahPenghuni;
-
+        
         $k = 0;
             
         // total gadget
@@ -71,7 +72,7 @@ class prediksiController extends Controller
 
             if($jumlahGadget <= 5){
                 $jumlahGadget = 0;      //sedikit
-            }elseif($jumlahGadget > 5){
+            }elseif($jumlahGadget <= 7){
                 $jumlahGadget = 1;      //sedang
             }else{
                 $jumlahGadget = 2;      //banyak
@@ -100,10 +101,18 @@ class prediksiController extends Controller
 
             // dd($bandwidth .' '. $jumlahPenghuni .' '. $jumlahGadget .' '. $totalRange);
 
+        //proses prediksi
+        $hasilPrediksi[0] = $this->prosesPrediksi($idData,0,$jumlahPenghuni,$jumlahGadget,$totalRange);
+        $hasilPrediksi[1] = $this->prosesPrediksi($idData,1,$jumlahPenghuni,$jumlahGadget,$totalRange);
+        $hasilPrediksi[2] = $this->prosesPrediksi($idData,2,$jumlahPenghuni,$jumlahGadget,$totalRange);
+
+        return redirect()->route( 'home' )->with( [ 'idData' => $idData, 'hasilPrediksi' => $hasilPrediksi ] );
+    }
+
+    public function prosesPrediksi($idData,$bandwidth,$jumlahPenghuni,$jumlahGadget,$totalRange)
+    {
         // 2. lakukan prediksi
             // $DecisionData = app('App\Http\Controllers\perhitunganController')->CreateTree();
-
-            $idData = $request->idData;
 
             $DecisionData = hasilDecisiontree::find($idData);                
             $akar = unserialize($DecisionData->serializeAkar);
@@ -113,8 +122,11 @@ class prediksiController extends Controller
 
             $i = 1;
 
+            // dd($akar);
+            
             //cek akar 1
             do{
+                // $index = 99;
                 if($i == 1){
                     $namaAkar = $akar[$i];
                 }elseif($i == 2){
@@ -122,7 +134,7 @@ class prediksiController extends Controller
                     $namaAkar = $akar[$i][$j];
                 }elseif($i == 3){
                     $k = $index;
-                    $namaAkar = $akar[$i][$j][$k];
+                    $namaAkar = $akar[$i][$j][$k];    //[itterasi 3][jumlah penghuni 0][bandwidth 2]
                 }elseif($i == 4){
                     $l = $index;
                     $namaAkar = $akar[$i][$j][$k][$l];
@@ -131,25 +143,22 @@ class prediksiController extends Controller
                     $namaAkar = $akar[$i][$j][$k][$l][$m];
                 }
                 
-                if($namaAkar == 'bandwidth' ){
+                if($namaAkar == 'Bandwidth' ){
                     $index = $bandwidth;
-                }elseif($namaAkar == 'jumlahPenghuni'){
+                }elseif($namaAkar == 'Jumlah Penghuni'){
                     $index = $jumlahPenghuni;
-                }elseif($namaAkar == 'jumlahGadget'){
+                }elseif($namaAkar == 'Banyak Gadget'){
                     $index = $jumlahGadget;
                 }else{
                     $index = $totalRange;
                 }
-
+                // $index = 99;
                 $i++;
 
             }while($namaAkar == 'Bandwidth' || $namaAkar == 'Jumlah Penghuni' || $namaAkar == 'Banyak Gadget' || $namaAkar == 'Range Penggunaan');
 
             $hasilPrediksi = $namaAkar;
 
-            // return redirect()->route('home')->with(['idData' => $idData]);
-
-            // dd($hasilPrediksi);
-            return redirect()->route( 'home' )->with( [ 'idData' => $idData, 'hasilPrediksi' => $hasilPrediksi ] );
+            return $hasilPrediksi;
     }
 }

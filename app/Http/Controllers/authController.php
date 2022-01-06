@@ -41,6 +41,6 @@ class authController extends Controller
     public function signout(Request $request)
     {
         $request->session()->flush();
-        return redirect('/')->with(['success' => 'berhasil Logout!']);;
+        return redirect('/')->with(['success' => 'berhasil Logout!']);
     }
 }

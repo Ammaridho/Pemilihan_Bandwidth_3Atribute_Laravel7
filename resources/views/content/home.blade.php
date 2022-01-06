@@ -7,13 +7,9 @@
   </head>
 
   <body>
-
-    <div class="container-fluid">
-      <div class="row" style="background-color: #ddbea9;">
-        <div class="col text-center">
-          <h1 class="p-3">WEBSITE PEMILIHAN BANDWIDTH INTERNET RUMAHAN</h1>
-        </div>
-      </div>
+    
+    {{-- notif --}}
+    <div class="container notif">
       <div class="row">
         <div class="col text-center">
           @if ($message = Session::get('success'))
@@ -47,16 +43,38 @@
       </div>
     </div>
 
-    {{-- {{dd($idData == null)}} --}}
+    {{-- Jumbotron --}}
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="isijumbotron m-auto">
+              <h1 class="display-4">Pemilihan Bandwidth Internet Rumahan</h1>
+              <p class="lead">Proses pemilihan menggunakan matode Algoritma Decision Tree C4.5</p>
+              <hr class="my-4">
+              @if (session('session_login'))
+                @if ($idData == null)
+                  <h4>Silahkan Pilih Hasil Pola Decision Tree</h4>
+                  <a class="btn btn-primary" data-toggle="modal" data-target="#modalHasilPrediksi" id="testtt">Pilih hasil pola</a>
+                @else
+                  <h4>Anda Menggunakan Data</h4>
+                @endif
+              @else
+                <h4>Silahkan Login Terlebih Dahulu</h4>
+                <a class="btn btn-primary" data-toggle="modal" data-target="#formlogin">Login</a>
+              @endif
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     
-    @if (session('session_login'))
-      @if ($idData == null)
-        <h1 class="text-center mt-5">Silahkan Pilih Hasil Pola Decision Tree</h1>
-      @else
-        <div class="container-fluid mt-4" >
-          
+    {{-- isi --}}
+    @if (session('session_login') && $idData != null)
+        {{-- TabelData --}}
+        <div class="container-fluid tabelData pt-5 pb-5">
           <div class="container">
-
+  
             <div class="row">
               <div class="col">
                 <h1>Data : {{$namaData}}</h1>
@@ -137,14 +155,14 @@
                 </table>
               </div>
             </div>
-
-          </div>
-            
+  
+          </div>      
         </div>
         
-        <div class="container-fluid mt-4">
-          <div class="row pt-5" style="background-color: #b7b7a4">
-            <div class="col-12 text-center">
+        {{-- treediagram --}}
+        <div class="container-fluid treeDiagram pt-5 pb-3">
+          <div class="row">
+            <div class="col-12 text-center judultreediagram">
               <h1>Tree Hasil C4.5</h1>
             </div>
             <div class="col-12">
@@ -187,49 +205,80 @@
                 </div>
             </div>
           </div>
-
-          <div class="row">
-              <div class="col">
-                  <div class="hasilPrediksi"></div>
-              </div>
-          </div>
         </div>
 
-        <div class="container mt-4">
+        {{-- top provider --}}
+        <div class="container pt-5 pb-5">
           <div class="row">
             <div class="col">
-              <h1 class="text-center">Top Provider Terbaik</h1>
+              <h1 class="text-center">Top Provider</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p class="text-center">Ini adalah provider terbaik berdasarkan dataset yang ada, penentuan didapat dari harga satuan bandwidth termurah</p>
             </div>
           </div>
           <div class="row mt-4">
             @foreach ($best_provider as $item)
-              <div class="col-4 p-2 d-flex justify-content-center text-center">
-                <div class="card" style="width: 18rem; height:18rem;">
-                  <div class="row" style="height: 70%">
-                    <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 200px;" alt="...">
-                  </div>
-                  <div class="row">
-                    <div class="card-body">
-                      <h5 class="card-title">{{$item['namaprovider']}}</h5>
-                      <div class="row">
-                        <div class="col">
-                          <p class="card-text">{{$item['bandwidth']}} Mbps</p>
-                        </div>
-                        <div class="col">
-                          <p class="card-text">Rp. {{$item['harga']}},-</p>
+              <div class="col-4 p-2 justify-content-center text-center">
+                  <a href="http://www.google.com/search?q={{$item['namaprovider']}}+internet" target="_blank" >
+                  <div class="card" style="width: 18rem; height:18rem;">
+                    <div class="row" style="height: 70%">
+                      <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 200px;" alt="...">
+                    </div>
+                    <div class="row">
+                      <div class="card-body">
+                        <h5 class="card-title">{{$item['namaprovider']}}</h5>
+                        <div class="row">
+                          <div class="col">
+                            <p class="card-text">{{$item['bandwidth']}} Mbps</p>
+                          </div>
+                          <div class="col">
+                            <p class="card-text">Rp. {{$item['harga']}},-</p>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </a>
               </div>
             @endforeach
             
           </div>
         </div>
           
-        <div class="container-fluid mt-4">
-          <div class="row mt-3 pt-5 pb-5 mb-3" style="background-color: #ffe8d6">
+        {{-- prediksi --}}
+        <div class="container-fluid">
+          {{-- hasil prediksi --}}
+          @if (isset($hasilPrediksi)) 
+            <div class="row pt-5 pb-5 hasilPrediksi">
+              <div class="col">
+                <h1 class="text-center">Hasil Prediksi</h1>
+                <p class="text-center">Berikut adalah hasil prediksi berdasarkan 3 range bandwidth</p>
+              </div>
+            </div>
+            <div class="row pb-5 pb-3 hasilPrediksi">
+              <div class="col-4">
+                <h3 class="text-center">0 - 20 Mbps</h3>
+                <h2 class="text-center">{{substr($hasilPrediksi[0],0,6)}}</h2>
+                <h5 class="text-center">Ketepatan : {{substr($hasilPrediksi[0],6)}}</h5>
+              </div>
+              <div class="col-4">
+                <h3 class="text-center">20 - 40 Mbps</h3>
+                <h2 class="text-center">{{substr($hasilPrediksi[1],0,6)}}</h2>
+                <h5 class="text-center">Ketepatan : {{substr($hasilPrediksi[1],6)}}</h5>
+              </div>
+              <div class="col-4">
+                <h3 class="text-center">40 Mbps Keatas</h3>
+                <h2 class="text-center">{{substr($hasilPrediksi[2],0,6)}}</h2>
+                <h5 class="text-center">Ketepatan : {{substr($hasilPrediksi[2],6)}}</h5>
+              </div>
+            </div>
+          @endif
+
+          {{-- form prediksi --}}
+          <div class="row pt-5 pb-5 formPrediksi">
               <div class="col text-center">
                   <h1>Masukkan Data untuk diprediksi</h1>
                   
@@ -241,17 +290,17 @@
                           
                           <input type="text" name="idData" value="{{$idData}}" hidden>
                 
-                          <div class="row">
+                          {{-- <div class="row">
                             <div class="col text-center">
                               <h4>Penjelasan singkat</h4>
                               <p>Provider = Nama penyedia layanan internet.</p>
                               <p>Bandwidth = Kecepatan internet (mbps).</p>
                             </div>
-                          </div>
+                          </div> --}}
                 
-                          {{-- Provider --}}
                           <div class="form-row">
-                            <div class="form-group col-4">
+                            {{-- Provider --}}
+                            {{-- <div class="form-group col-4">
                               <label for="inputState">Provider</label>
                               <select id="inputState" class="form-control" name="provider" required>
                                 <option selected>Provider anda saat ini..</option>
@@ -269,22 +318,24 @@
                                 <option value="Transvision">Transvision</option>
                                 <option value="Megavision">Megavision</option>
                               </select>
-                            </div>
-                            <div class="form-group col-4">
+                            </div> --}}
+                            {{-- Bandwidth --}}
+                            {{-- <div class="form-group col-4">
                               <label for="bandwidth">Bandwidth</label>
                               <input type="number" class="form-control" id="bandwidth" name="bandwidth" placeholder="cth. 50" min="0" max="999" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" required>
-                            </div>
-                            <div class="form-group col-4">
+                            </div> --}}
+                            {{-- Biaya --}}
+                            {{-- <div class="form-group col-4">
                               <label for="biayaBulanan">Biaya Bulanan</label>
                               <input type="number" class="form-control" id="biayaBulanan" name="biayaBulanan" placeholder="cth. 400000" min="0" max="9999999" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" required>
-                            </div>
+                            </div> --}}
                           </div>
                 
-                          <hr class=" bg-dark mt-5 mb-5">
+                          {{-- <hr class=" bg-dark mt-5 mb-5"> --}}
                 
                           <div class="row">
                             <div class="col text-center">
-                              <h4>Penjelasan singkat</h4>
+                              {{-- <h4>Penjelasan singkat</h4> --}}
                               <p>Penggunaan dibagi atas 3 macam yaitu:</p>
                               <p>1. Ringan = Chatting, Browsing, streaming resolusi rendah 360p.</p>
                               <p>2. Sedang = Social Media Streaming , video conference, download dan upload < 10Gb (sedang).</p>
@@ -311,11 +362,10 @@
 
                           </div>
                 
-                          
                           <hr class=" bg-dark mt-5 mb-5">
                           
                           <div class="text-center mt-3">
-                            <button type="submit" class="btn serahkan" style="background-color: #cb997e; border: solid 1px black" >Cek Prediksi</button>
+                            <button type="submit" class="btn serahkan" style="background-color: #C37A61; border: solid 1px black" >Cek Prediksi</button>
                           </div>
                 
                       </form>
@@ -323,18 +373,17 @@
               </div>
           </div>
 
-          @if (isset($hasilPrediksi)) 
-            <div class="row">
-              <div class="col m-3">
-                <h1 class="text-center">{{$hasilPrediksi}}</h1>
-              </div>
-            </div>
-          @endif
         </div>
-      @endif
-    @else
-        <h1 class="text-center mt-5">Silahkan Login Terlebih Dahulu</h1>
     @endif
+      
+    {{-- footer --}}
+    <div class="container-fluid">
+      <div class="row footer">
+          <div class="pt-2 col-12 text-center">
+            <p>Copyright &copy; 2020 - 2022 Ammaridho</p>
+        </div>
+      </div>
+    </div>
 
   </body>
     

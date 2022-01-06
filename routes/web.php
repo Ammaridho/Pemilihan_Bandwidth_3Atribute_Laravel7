@@ -61,4 +61,7 @@ Route::group(['middleware' => 'ceksession'], function(){
 
     // signout
     Route::get('/signout','authController@signout')->name('signout');
+
+    //downloadcontohExcel
+    Route::get('/downloadcontoh','ImportExportExcelController@contohExcel')->name('downloadcontoh');
 });

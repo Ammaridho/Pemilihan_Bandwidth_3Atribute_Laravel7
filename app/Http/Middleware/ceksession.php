@@ -16,7 +16,7 @@ class ceksession
     public function handle($request, Closure $next)
     {
         if(!session('session_login')){
-            return('/');
+            return redirect('/');
         }
         return $next($request);
     }

@@ -50,4 +50,9 @@ class ImportExportExcelController extends Controller
 		// alihkan halaman kembali
 		return redirect()->route('hasilDecisiontree')->with(['namaData' => $namaData, 'deskripsiData' => $deskripsiData]);
 	}
+
+	public function contohExcel()
+	{
+		return response()->download(public_path('file_Excel/fileContoh/contohExcel.xlsx'));
+	}
 }

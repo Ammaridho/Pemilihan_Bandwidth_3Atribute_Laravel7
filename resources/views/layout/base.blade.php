@@ -15,8 +15,8 @@
   <body>
     
     {{-- navigasi --}}
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #cb997e">
-        <a class="navbar-brand font-weight-bold">Skripsi C4.5</a>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <a class="skripsic45 navbar-brand font-weight-bold">Skripsi C4.5</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -154,9 +154,18 @@
 
                 <label for="deskripsiData">Deskripsi</label>
                 <div class="form-group">
-                  <textarea name="deskripsiData" id="deskripsiData" cols="30" rows="10"></textarea>
+                  <textarea name="deskripsiData" id="deskripsiData" cols="30" rows="5"></textarea>
                 </div>
 
+                <label for="">Format Excel</label>
+                <p>1. excel terdiri dari 3 sheet sesuai contoh</p>
+                <p>2. Masing masing sheet harus berelasi id sesuai contoh</p>
+                <p>3. title setiap kolom harus ada dan penulisan sesuai contoh</p>
+
+                <a href="{{route('downloadcontoh')}}">download contoh excel</a>
+
+                <br><br>
+                
                 <label for="fileExcel">Pilih file excel</label>
                 <div class="form-group">
                   <input type="file" name="file" id="fileExcel" required="required">
@@ -230,7 +239,7 @@
         </div>
       </div>
       
-      @endif
+    @endif
       <!-- tentangWebsite -->
       <div class="modal fade" id="tentangWebsite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">

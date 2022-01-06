@@ -192,7 +192,7 @@ class perhitunganController extends Controller
 		// Empty database
 		foreach (internet_keluarga::all() as $e) { $e->delete(); }
 
-        return redirect('/');
+        return redirect('/')->with(['success' => 'berhasil Membuat Pola Prediksi']);
     }
 
     public function bestProvider($hasilDecisiontree)
@@ -247,7 +247,7 @@ class perhitunganController extends Controller
             $a[$value['id']] = [$value['biayaBulanan'] / $value['bandwidth'], $value['id']];
         }
 
-        arsort($a); //sort value tapi index tetap sesuai sebelumnya
+        asort($a); //sort value tapi index tetap sesuai sebelumnya
 
         $best3 = array_slice($a,0,3); //ambil 3 terbaik
 
