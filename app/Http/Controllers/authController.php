@@ -14,13 +14,19 @@ class authController extends Controller
 {
     public function signup(Request $request)
     {
-        $signup = new User;
-        $signup->username = $request->username;
-        $signup->password = bcrypt($request->password);
-        $signup->remember_token = Str::random(100);
-        $signup->save();
+        $signupCheck = User::where('username',$request->username)->first();
+        if(!isset($signupCheck)){
+            $signup = new User;
+            $signup->username = $request->username;
+            $signup->password = bcrypt($request->password);
+            $signup->remember_token = Str::random(100);
+            $signup->save();
+            return redirect('/')->with(['success' => 'Berhasil Daftar!']);
+        }else{
+            return redirect('/')->with(['error' => 'Username telah dipakai!']);         
+        }
         
-        return redirect('/')->with(['success' => 'Berhasil Daftar!']);
+        
     }
 
     public function signin(Request $request)

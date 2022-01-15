@@ -45,7 +45,7 @@ body{
     	overflow:auto;
 		width: 100%;
 		
-		background-size: 1920px 1080px;
+		background-size: cover;
 	}
 	.isijumbotron{
 		top: 23vh;

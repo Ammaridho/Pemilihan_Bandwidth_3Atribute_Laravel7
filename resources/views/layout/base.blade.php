@@ -161,6 +161,7 @@
                 <p>1. excel terdiri dari 3 sheet sesuai contoh</p>
                 <p>2. Masing masing sheet harus berelasi id sesuai contoh</p>
                 <p>3. title setiap kolom harus ada dan penulisan sesuai contoh</p>
+                <p>4. Maksimal jumlah data keluarga adalah 5000 data (dapat lebih namun waktu proses akan lebih lama, 5000 data memakan waktu 2 jam dalam proses)</p>
 
                 <a href="{{route('downloadcontoh')}}">download contoh excel</a>
 
@@ -259,15 +260,15 @@
                     <img src="img/fotocv.png" class="img-thumbnail">
                 </div>
                 <div class="col-sm-9 p-5">
-                    <p class="text-justify">Assalamualaikum, Wr. Wb. 
+                    <p class="text-justify">
+                      Assalamualaikum, Wr. Wb. 
                       <br><br>
                       Perkenalkan nama saya Ammaridho, 
                       <br><br>
                       saya adalah mahasiswa prodi Teknik Informatika angkatan 2018, Fakultas Sains dan Teknologi, UIN Syarif Hidayatullah Jakarta.
                       <br><br>
-                      Saya sedang melakukan penelitian dalam rangka penyelesaiian Tugas Akhir Skripsi yang berjudul "Pemilihan Bandwidth Internet Rumahan Dengan Metode Algoritma Decision Tree C4.5".
-                      <br><br>
-                      Saya ucapkan terimakasih kepada saudara/i atas ketersediaannya mengisi survey ini, data yang diambil hanya akan digunakan untuk penelitian saya dan tidak akan disebarluaskan.</p>
+                      Website ini merupakan hasil penelitian saya dalam rangka penyelesaiian Tugas Akhir Skripsi yang berjudul "Pemilihan Bandwidth Internet Rumahan Dengan Metode Algoritma Decision Tree C4.5".
+                    </p>
                 </div>
               </div>
             </div>

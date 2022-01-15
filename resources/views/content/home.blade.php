@@ -57,7 +57,7 @@
                   <h4>Silahkan Pilih Hasil Pola Decision Tree</h4>
                   <a class="btn btn-primary" data-toggle="modal" data-target="#modalHasilPrediksi" id="testtt">Pilih hasil pola</a>
                 @else
-                  <h4>Anda Menggunakan Data</h4>
+                  <h4>Anda Menggunakan Data {{$namaData}}</h4>
                 @endif
               @else
                 <h4>Silahkan Login Terlebih Dahulu</h4>
@@ -77,7 +77,7 @@
   
             <div class="row">
               <div class="col">
-                <h1>Data : {{$namaData}}</h1>
+                <h1 class="text-center">Data : {{$namaData}}</h1>
               </div>
             </div>
       
@@ -114,8 +114,8 @@
                       <th scope="col">Kurang</th>
                       <th scope="col">Cukup</th>
                       <th scope="col">Lebih</th>
-                      <th scope="col">Entropy</th>
-                      <th scope="col">Gain</th>
+                      {{-- <th scope="col">Entropy</th>
+                      <th scope="col">Gain</th> --}}
                     </tr>
                   </thead>
                   <tbody>
@@ -127,7 +127,7 @@
                       <td>{{$jml[0]}}</td>
                       <td>{{$jml[1]}}</td>
                       <td>{{$jml[2]}}</td>
-                      <td>{{$totEntropykel}}</td>
+                      {{-- <td>{{$totEntropykel}}</td> --}}
                       <td></td>
                     </tr>      
       
@@ -135,7 +135,7 @@
                       <tr>
                         <th scope="row">{{$hasil[$i]['macamAtribut']}}</th>
                         <th colspan="6"></th>
-                        <th>{{$hasil[$i]['gain']}}</th>
+                        {{-- <th>{{$hasil[$i]['gain']}}</th> --}}
                       </tr>                
       
                       @for ($j = 0; $j < count($hasil[$i]['arrayNamaBagianAttribut']); $j++)
@@ -145,7 +145,7 @@
                         <td>{{$hasil[$i]['sortingTarget'][$j][0]}}</td>
                         <td>{{$hasil[$i]['sortingTarget'][$j][1]}}</td>
                         <td>{{$hasil[$i]['sortingTarget'][$j][2]}}</td>
-                        <td>{{$hasil[$i]['entropy'][$j]}}</td>
+                        {{-- <td>{{$hasil[$i]['entropy'][$j]}}</td> --}}
                       </tr>
                       @endfor
                     @endfor
@@ -348,7 +348,7 @@
                             <div class="form-col col-md-2 mb-4">
                               <div class="form-group">
                                 <label for="jumlahPenghuni">Jumlah penghuni</label>
-                                <input id="jumlahpenghuni" type="number" name="jumlahPenghuni" class="form-control" placeholder="Jumlah penghuni.." min="0" max="50" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" required>
+                                <input id="jumlahpenghuni" type="number" maxlength="2" name="jumlahPenghuni" class="form-control" placeholder="Jumlah penghuni.." min="0" max="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>
                               </div>
                             </div>
                 
