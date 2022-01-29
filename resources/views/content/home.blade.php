@@ -348,7 +348,7 @@
                             <div class="form-col col-md-2 mb-4">
                               <div class="form-group">
                                 <label for="jumlahPenghuni">Jumlah penghuni</label>
-                                <input id="jumlahpenghuni" type="number" maxlength="2" name="jumlahPenghuni" class="form-control" placeholder="Jumlah penghuni.." min="0" max="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>
+                                <input id="jumlahpenghuni" type="number" maxlength="2" name="jumlahPenghuni" class="form-control" placeholder="Jumlah penghuni.." min="0" max="30" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>
                               </div>
                             </div>
                 
