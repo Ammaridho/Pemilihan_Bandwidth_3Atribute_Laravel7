@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class admin
+class adminPolicy
 {
     use HandlesAuthorization;
 
@@ -19,8 +19,10 @@ class admin
         //
     }
 
-    public function admin(Type $var = null)
+    //untuk memberi hak akses admin
+    //dapat menambah pola
+    public function adminPolicy(User $user)
     {
-        # code...
+        $user->username == 'adminUtama';
     }
 }

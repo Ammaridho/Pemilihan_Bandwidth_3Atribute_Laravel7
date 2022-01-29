@@ -38,7 +38,8 @@ class homeController extends Controller
                 // dd($idData);
                 $idData = null;
                 $semuaData = hasilDecisiontree::where('user_id',$idAkunLogin)->orderBy('created_at', 'desc')->get();
-                return view('content.home',compact('idData','semuaData'));
+                $listAkun = User::all();
+                return view('content.home',compact('idData','semuaData','listAkun'));
             }else{
                 // dd($idData);
                 // $idData = $request->idData;
@@ -61,12 +62,33 @@ class homeController extends Controller
 
                 $best_provider = best_provider::where('hasildecisiontree_id',$idData)->get();
 
-                return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','best_provider'));
+                $listAkun = User::all();
+
+                // dd($listAkun);
+
+                return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','best_provider','listAkun'));
             }
 
 
         }else{
-            return view('content.home');
+            $data = hasilDecisiontree::where('status','utama')->first(); //jika di set maka ambil data sesuai set
+
+            $idData = $data->id;
+
+            $namaData       = $data->namaHasilDecisionTree;
+            $tanggalData    = $data->created_at;
+            $deskripsiData  = $data->deskripsi;
+            $jmlKel         = $data->jmlKel;
+            $jml            = unserialize($data->jml);
+            $totEntropykel  = $data->totEntropykel;
+            $hasil          = unserialize($data->hasil);
+            $akar           = unserialize($data->serializeAkar);
+
+            $hasilPrediksi = session()->get('hasilPrediksi'); //MASALAH DISINI PROSES HILANG SAAT DI RELOAD
+
+            $best_provider = best_provider::where('hasildecisiontree_id',$idData)->get();
+
+            return view('content.home',compact('idData','namaData','tanggalData','deskripsiData','jmlKel','jml','totEntropykel','hasil','akar','hasilPrediksi','best_provider'));
         }
     }
 
@@ -84,6 +106,25 @@ class homeController extends Controller
         hasilDecisiontree::find($request->id)->delete();
 
         return redirect('/')->with(['success' => 'Berhasil menghapus hasil decision tree!']);
+    }
+
+    public function jadikanpolautama(Request $request)
+    {
+        $utamasebelumnya = hasildecisiontree::where('status','utama')->first();
+        $utamasebelumnya->status = '';
+        $utamasebelumnya->save();
+
+        $jadikanutama = hasildecisiontree::find($request->id);
+        $jadikanutama->status = 'utama';
+        $jadikanutama->save();
+
+        return redirect('/')->with(['success' => 'Berhasil mengganti pola utama!']);
+    }
+
+    public function hapusAkun(Request $request)
+    {
+        User::find($request->id)->delete();
+        return redirect('/')->with(['success' => 'Berhasil menghapus Akun!']);
     }
   
 }

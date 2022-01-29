@@ -7,6 +7,17 @@
 	font-family: "Poppins";
 }
 
+/* tab */
+.tab {
+    display: inline-block;
+    margin-left: 20px;
+}
+.mintab {
+    display: inline-block;
+    margin-left: -20px;
+}
+
+
 /* body */
 body{
 	background-image: url("/img/aset/backgroundUtama.jpg");
@@ -23,6 +34,19 @@ body{
 .navbar{
 	background-color: #ffffff;
 	
+}
+
+/* list hasil decisiontree */
+
+.list-group.listHasilDecisionTree{
+	height: 430px;
+	overflow-y:scroll;
+}
+
+/* list akun */
+.list-group.listAkun{
+	height: 430px;
+	overflow-y:scroll;
 }
 
 /* notif */
@@ -69,10 +93,7 @@ body{
 	.treeDiagram{
 		background-color: #2B2D42;
 	}
-	.list-group.listHasilDecisionTree{
-		height: 430px;
-		overflow-y:scroll;
-	}
+	
 
 	.tree {
 		width: 100%;
@@ -169,6 +190,15 @@ body{
 	.tree li a:hover+ul li::after, .tree li a:hover+ul li::before, .tree li a:hover+ul::before, .tree li a:hover+ul ul::before {
 		border-color: #94a0b4;
 	}
+/* penjelasanData ke User */
+.penjelasanData{
+	background-color: #2B2D42; 
+	
+}
+.isipenjelasanData h1,.isipenjelasanData h3,.isipenjelasanData p{
+	color: #ffffff;
+}
+
 
 /* form prediksi */
 	.formPrediksi{

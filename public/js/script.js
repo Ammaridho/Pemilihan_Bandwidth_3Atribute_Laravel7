@@ -15,7 +15,7 @@ $('#signup #username, #signup #password, #signup #password_confirmation').on('ke
 
 //logout
 function signout() {
-    var confirmation = confirm("Are u sure?");
+    var confirmation = confirm("Yakin Keluar?");
 
     if (confirmation == true) {
         window.location.href = "/signout";

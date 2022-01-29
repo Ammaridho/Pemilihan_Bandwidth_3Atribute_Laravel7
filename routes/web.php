@@ -20,12 +20,11 @@ use Illuminate\Support\Facades\Route;
 // Utama
 Route::get('/','homeController@index')->name('home');
 
-// signup
-Route::post('/signup','authController@signup')->name('signup');
-
 // signin
 Route::post('/signin','authController@signin')->name('signin');
 
+// signup
+Route::post('/signup','authController@signup')->name('signup');
 
 
 
@@ -34,11 +33,20 @@ Route::get('/treeDiagramTest','homeController@treeDiagramTest')->name('treeDiagr
 
 Route::get('/resultTree','homeController@resultTree')->name('resultTree');
 
+// Form Tambahan
+Route::get('/penghuni','penggunaanController@penghuni')->name('penghuni');
 
+Route::get('/penggunaangadget','penggunaanController@gadget')->name('gadget');
+
+// Pengecekan
+Route::get('/prediksi','prediksiController@prosesCek')->name('prosesCek');
 
 
 Route::group(['middleware' => 'ceksession'], function(){
 
+    //jadikan pola utama
+    Route::get('/jadikanpolautama/{id}','homeController@jadikanpolautama')->name('jadikanpolautama');
+    
     //lihat hasil decision tree
     Route::get('/hasilDecisiontree','perhitunganController@hasilDecisiontree')->name('hasilDecisiontree');
     
@@ -47,21 +55,16 @@ Route::group(['middleware' => 'ceksession'], function(){
     
     // Hapus Hasil Decision Tree
     Route::delete('/hapusHasilDecisionTree/{id}','homeController@hapusHasilDecisiontree')->name('hapusHasilDecisionTree');
+
+    // Hapus Akun
+    Route::delete('/hapusAdmin/{id}','homeController@hapusAkun')->name('hapusAkun');
     
     //Import Export Excel
     Route::post('/importExcel','ImportExportExcelController@import_excel')->name('importExcel');
     
-    // Pengecekan
-    Route::get('/prediksi','prediksiController@prosesCek')->name('prosesCek');
-    
-    // Form Tambahan
-    Route::get('/penghuni','penggunaanController@penghuni')->name('penghuni');
-    
-    Route::get('/penggunaangadget','penggunaanController@gadget')->name('gadget');
-
     // signout
     Route::get('/signout','authController@signout')->name('signout');
-
+    
     //downloadcontohExcel
     Route::get('/downloadcontoh','ImportExportExcelController@contohExcel')->name('downloadcontoh');
 });
