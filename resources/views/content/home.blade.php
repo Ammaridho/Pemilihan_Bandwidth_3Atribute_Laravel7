@@ -162,10 +162,11 @@
           </div>
           
           {{-- treediagram --}}
-          <div class="container-fluid treeDiagram pt-5 pb-3">
+          <div class="container-fluid treeDiagram pt-5 pb-5 ">
             <div class="row">
               <div class="col-12 text-center judultreediagram">
-                <h1>Tree Hasil C4.5</h1>
+                <h1 class="text-warning">Hasil Pola Prediksi</h1>
+                <p class="font-weight-bold text-white">Berikut adalah pola hasil decision Tree C4.5</p>
               </div>
               <div class="col-12">
                   <div class="tree">
@@ -205,6 +206,53 @@
                           </li>
                       </ul>
                   </div>
+              </div>
+            </div>
+            <div class="container">
+              <div class="row">
+                <div class="col text-center">
+                  <h3 class="text-white mb-3" >Ketentuan membaca alur :</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3">
+                  <p class="text-white" style="font-size: 20px">
+                    1.	Bandwidth: <br>
+                    <span class="tab text-white">a.	<= 20 	(Kiri)<br>
+                    b.	<= 40	(Tengah)<br>
+                    c.	> 40	(Kanan)
+                  </p>
+                </div>
+                <div class="col-3">
+                  <p class="text-white" style="font-size: 20px">2.	Jumlah Penghuni:<br>
+                    <span class="tab text-white">a.	<= 3	(Kiri)<br>
+                    b.	<= 5	(Tengah)<br>
+                    c.	> 5		(Kanan)
+                  </p>
+                </div>
+                <div class="col-3"> 
+                  <p class="text-white" style="font-size: 20px">
+                    3.	Total Gadget:<br>
+                    <span class="tab text-white">a.	<= 5 	(Kiri)<br>
+                    b.	<= 7	(Tengah)<br>
+                    c.	7 >		(Kanan)
+                  </p>
+                </div>
+                <div class="col-3">
+                  <p class="text-white" style="font-size: 20px">
+                    4.	Range Penggunaan:	<br>
+                    <span class="tab text-white">Proses:<br>
+                      <span class="tab text-white">a.	Pengakumulasian Point:<br>
+                        <span class="tab text-white">Ringan = 1<br>
+                          Sedang = 2<br>
+                          Berat = 3<br>
+                            
+                           <span class="mintab text-white">b.	Membandingkan hasil akumulasi point<br>
+                            <span class="tab text-white">< 10	(Kiri)<br>
+                          <= 15 	(Tengah)<br>
+                          15 > 	(Kanan)
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -257,18 +305,18 @@
               <div class="row pt-5 pb-5">
                 <div class="col">
                   <h1 class="text-center font-weight-bold">Rincian hasil Prediksi</h1>
-                  <p class="text-center">Berikut adalah hasil prediksi berdasarkan 3 range bandwidth</p>
+                  <p class="text-center font-weight-bold">Berikut adalah hasil prediksi berdasarkan 3 range bandwidth</p>
                 </div>
               </div>
-              <div class="row pb-2 pb-3">
+              <div class="row pb-2 pb-3 simpulanRincian">
                 <div class="col-4">
                   <h3 class="text-center">20 Mbps Kebawah</h3>
                   @if (substr($hasilPrediksi[0],0,6) == 'Kurang')
-                    <h2 class="text-center text-danger">{{substr($hasilPrediksi[0],0,6)}}</h2>
+                    <h2 class="text-center text-danger font-weight-bold">{{substr($hasilPrediksi[0],0,6)}}</h2>
                   @elseif(substr($hasilPrediksi[0],0,6) == 'Cukup ')
-                    <h2 class="text-center text-success">{{substr($hasilPrediksi[0],0,6)}}</h2>
+                    <h2 class="text-center text-success font-weight-bold">{{substr($hasilPrediksi[0],0,6)}}</h2>
                   @elseif(substr($hasilPrediksi[0],0,6) == 'Lebih ')
-                    <h2 class="text-center text-primary">{{substr($hasilPrediksi[0],0,6)}}</h2>
+                    <h2 class="text-center text-primary font-weight-bold">{{substr($hasilPrediksi[0],0,6)}}</h2>
                   @endif
                   
                   <h5 class="text-center">Ketepatan : {{substr($hasilPrediksi[0],6)}}</h5>
@@ -276,22 +324,22 @@
                 <div class="col-4">
                   <h3 class="text-center">20 - 40 Mbps</h3>
                   @if (substr($hasilPrediksi[1],0,6) == 'Kurang')
-                    <h2 class="text-center text-danger">{{substr($hasilPrediksi[1],0,6)}}</h2>
+                    <h2 class="text-center text-danger font-weight-bold">{{substr($hasilPrediksi[1],0,6)}}</h2>
                   @elseif(substr($hasilPrediksi[1],0,6) == 'Cukup ')
-                    <h2 class="text-center text-success">{{substr($hasilPrediksi[1],0,6)}}</h2>
+                    <h2 class="text-center text-success font-weight-bold">{{substr($hasilPrediksi[1],0,6)}}</h2>
                   @elseif(substr($hasilPrediksi[1],0,6) == 'Lebih ')
-                    <h2 class="text-center text-primary">{{substr($hasilPrediksi[1],0,6)}}</h2>
+                    <h2 class="text-center text-primary font-weight-bold">{{substr($hasilPrediksi[1],0,6)}}</h2>
                   @endif
                   <h5 class="text-center">Ketepatan : {{substr($hasilPrediksi[1],6)}}</h5>
                 </div>
                 <div class="col-4">
                   <h3 class="text-center">40 Mbps Keatas</h3>
                   @if (substr($hasilPrediksi[2],0,6) == 'Kurang')
-                    <h2 class="text-center text-danger">{{substr($hasilPrediksi[2],0,6)}}</h2>
+                    <h2 class="text-center text-danger font-weight-bold">{{substr($hasilPrediksi[2],0,6)}}</h2>
                   @elseif(substr($hasilPrediksi[2],0,6) == 'Cukup ')
-                    <h2 class="text-center text-success">{{substr($hasilPrediksi[2],0,6)}}</h2>
+                    <h2 class="text-center text-success font-weight-bold">{{substr($hasilPrediksi[2],0,6)}}</h2>
                   @elseif(substr($hasilPrediksi[2],0,6) == 'Lebih ')
-                    <h2 class="text-center text-primary">{{substr($hasilPrediksi[2],0,6)}}</h2>
+                    <h2 class="text-center text-primary font-weight-bold">{{substr($hasilPrediksi[2],0,6)}}</h2>
                   @endif
                   <h5 class="text-center">Ketepatan : {{substr($hasilPrediksi[2],6)}}</h5>
                 </div>
@@ -299,7 +347,7 @@
               
               <hr class="bg-dark">
  
-              <div class="row pt-2 pb-4">
+              <div class="row pt-2 pb-3">
                 <div class="col">
                   <h1 class="text-center font-weight-bold">Kesimpulan</h1>
                 </div>
@@ -307,14 +355,14 @@
 
               <div class="row pb-4">
                 <div class="col">
-                  <h2 class="text-center text-success bg-dark">{{$simpulanprediksi}}</h2>
+                  <h2 class="text-center text-success bg-dark p-2">{{$simpulanprediksi}}</h2>
                 </div>
               </div>  
 
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <p class="text-center">Ini adalah provider terbaik dengan harga satuan bandwidth termurah</p>
+                    <p class="text-center font-weight-bold">Ini adalah provider terbaik dengan harga satuan bandwidth termurah</p>
                   </div>
                 </div>
                 <div class="row text-center pb-5">
@@ -350,9 +398,9 @@
             <div class="row pt-5 pb-5 formPrediksi">
                 <div class="col text-center">
                   @if (isset($hasilPrediksi))
-                    <h1>Masukkan Data untuk melakukan prediksi ulang</h1>
+                    <h1 class="text-warning">Masukkan Data untuk melakukan prediksi ulang</h1>
                   @else
-                    <h1>Masukkan Data untuk diprediksi</h1>
+                    <h1 class="text-warning">Masukkan Data untuk diprediksi</h1>
                   @endif
                     
                     
@@ -392,7 +440,7 @@
 
                             </div>
                   
-                            <hr class=" bg-dark mt-5 mb-5">
+                            <hr class=" bg-white mt-5 mb-5">
                             
                             <div class="text-center mt-3">
                               <button type="submit" class="btn serahkan" style="background-color: #C37A61; border: solid 1px black" >Cek Prediksi</button>
@@ -468,20 +516,20 @@
             @if (isset($hasilPrediksi)) 
               <div class="row pt-5 pb-4">
                 <div class="col">
-                  <h1 class="text-center">Hasil Prediksi</h1>
+                  <h1 class="text-center font-weight-bold">Hasil Prediksi</h1>
                 </div>
               </div>
 
               <div class="row pb-4">
                 <div class="col">
-                  <h2 class="text-center text-success bg-dark">{{$simpulanprediksi}}</h2>
+                  <h2 class="text-center text-success bg-dark p-2">{{$simpulanprediksi}}</h2>
                 </div>
               </div>  
 
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <p class="text-center">Ini adalah provider terbaik dengan harga satuan bandwidth termurah</p>
+                    <p class="text-center font-weight-bold">Ini adalah provider terbaik dengan harga satuan bandwidth termurah</p>
                   </div>
                 </div>
                 <div class="row text-center pb-5">
@@ -518,9 +566,9 @@
             <div class="row pt-5 pb-5 formPrediksi">
                 <div class="col text-center">
                   @if (isset($hasilPrediksi))
-                  <h1>Masukkan Data untuk melakukan prediksi ulang</h1>
+                  <h1 class="text-warning">Masukkan Data untuk melakukan prediksi ulang</h1>
                   @else
-                    <h1>Masukkan Data untuk diprediksi</h1>
+                    <h1 class="text-warning">Masukkan Data untuk diprediksi</h1>
                   @endif
                     
                     
@@ -560,7 +608,7 @@
 
                             </div>
                   
-                            <hr class=" bg-dark mt-5 mb-5">
+                            <hr class=" bg-white mt-5 mb-5">
                             
                             <div class="text-center mt-3">
                               <button type="submit" class="btn serahkan" style="background-color: #C37A61; border: solid 1px black" >Cek Prediksi</button>

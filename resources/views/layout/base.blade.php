@@ -90,7 +90,7 @@
 						</div>
             <div class="bawah text-center">
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Masuk</button>
               </div>
 						</div>
 					</div>
@@ -181,6 +181,7 @@
                     - Range Penggunaan setiap gadget.<br>
                     - Bandwidth Yang digunakan.<br>
                     - Simpulan Pemakaian.<br>
+                    - dll sesuai contoh<br>
                     <span class="mintab">2. Excel terdiri dari 3 sheet sesuai contoh.<br>
                   3. Masing masing sheet harus berelasi id sesuai contoh.<br>
                   4. Title setiap kolom harus ada dan penulisan sesuai contoh.<br>

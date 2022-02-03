@@ -214,6 +214,11 @@ body{
 		background-color: #8D99AE;
 	}
 
+	.simpulanRincian h2{
+		text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+
+	}
+
 /*  footer */
 	.footer{
 		background-color: #0F1316;
