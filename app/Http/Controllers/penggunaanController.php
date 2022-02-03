@@ -17,8 +17,8 @@ class penggunaanController extends Controller
     {   
         $jmlpenghuni    = $request->ke;
         $jmlgadget      = $request->bg;
-        $nama           = $request->nama;
+        // $nama           = $request->nama;
         
-        return view('content.formgadget',compact('jmlpenghuni','jmlgadget','nama'));
+        return view('content.formgadget',compact('jmlpenghuni','jmlgadget'));
     }
 }

@@ -2,16 +2,24 @@
     <script>console.log($jmlpenghuni);</script>
 
     <div id="parentPengguna">
-      <h4 class="text-center">Data Penghuni</h4>
+      <h4 class="text-center">Banyak Gadget</h4>
       @for ($i = 1; $i <= $jmlpenghuni; $i++)
 
         <div class="form-row">
-          <div class="form-group col-7">
+          {{-- <div class="form-group col-7">
             <label for="nama{{$i}}">{{$i}}.Nama</label>
             <input type="text" class="nama form-control" id="nama{{$i}}" placeholder="Nama Penghuni" name="nama{{$i}}"  onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)" required>
-          </div>
-          <div class="form-group col-5">
-            <label for="banyakGadget{{$i}}">Banyak Gadget</label>
+          </div> --}}
+
+          {{-- <input class="nama form-control" type="hidden" id="nama{{$i}}" name="nama{{$i}}" value="nama{{$i}}"> --}}
+
+          {{-- <div class="form-group col-7">
+            <label for="penghuni{{$i}}">Penghuni {{$i}}</label>
+            <input type="text" class="penghuni form-control" id="penghuni{{$i}}" placeholder="penghuni Penghuni" name="penghuni{{$i}}"  onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)" required>
+          </div> --}}
+
+          <div class="form-group col-12">
+            <label for="banyakGadget{{$i}}">Penghuni {{$i}}</label>
             <input id="banyakgadget{{$i}}" type="number" name="banyakGadget{{$i}}" class="banyakgadget form-control" placeholder="" min="0" max="20" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" required>
           </div>
         </div>
@@ -42,7 +50,7 @@
           nama[i-1] = $(`#nama${i}`).val();
         }
 
-        $.get("{{route('gadget')}}",{ke:ke,bg:bg,nama:nama}, function(data){
+        $.get("{{route('gadget')}}",{ke:ke,bg:bg}, function(data){
           $("#formgadget").html(data);
         });
       });

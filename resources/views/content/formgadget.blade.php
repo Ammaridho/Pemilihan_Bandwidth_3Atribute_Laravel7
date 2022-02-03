@@ -5,7 +5,7 @@
 @for ($i = 0; $i < $jmlpenghuni; $i++)
 
     <div class="form-row mt-3">
-      <h5>{{$i+1}}. {{$nama[$i]}}</h5>
+      <h5>Penghuni {{$i+1}}</h5>
     </div>
 
     {{-- banyak gadget --}}
@@ -13,10 +13,22 @@
       
 
     <div class="form-row">
-      <div class="form-group col-4">
+      {{-- <div class="form-group col-4">
         <label for="namaGadget">Gadget</label>
         <input type="text" class="form-control" id="namaGadget" name="namaGadget{{$i.$j}}" placeholder="Hp/Laptop/Tv.." onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)" required>
+      </div> --}}
+      <div class="form-group col-4">
+          <label for="namaGadget">Gadget</label>
+          <select class="custom-select" id="namaGadget" required>
+            <option selected disabled  value=null>Pilih..</option>
+            <option value="Hp/Tablet">Hp/Tablet</option>
+            <option value="Laptop/Komputer">Laptop/Komputer</option>
+            <option value="Tv">Tv</option>
+            <option value="Console Game">Console Game</option>
+            {{-- <option value="">Console Game</option> --}}
+          </select>
       </div>
+
       <div class="form-group col-8">
         <label for="penggunaan">Penggunaan</label>
 
