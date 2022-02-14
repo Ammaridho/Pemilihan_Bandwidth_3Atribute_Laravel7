@@ -15,313 +15,140 @@ use Session;
 
 class perhitunganController extends Controller
 {
-    public function treeDiagramTest()
+// Perhitungan Decision Tree =====================================================
+    public function Algoritma($dataPatokan)
     {
-        return view('content.resultTreetest');
-    }
+        //Oper Data Patokan dari selection
+        if($dataPatokan == ''){
 
-    public function GainTertinggi($macamAtribut,$itterasi)
-    {
-        
-        $gainTeringgi = max(array_column($itterasi['hasil'],'gain'));    //Membandingkan masing masing gain atribut
+            //Pengecekan masukkan kebawah =========================================
 
-        if($gainTeringgi > 0){    //cek apakah gain tertinggi lebih dari nol
-
-            for($i = 0 ; $i < count($itterasi['hasil']); $i++){
-                if($itterasi['hasil'][$i]['gain'] == $gainTeringgi){
-                    $indexAtrributGainTertinggi = $i;                       //ambil index array yang memiliki gain tertinggi
-                }
-            }
-
-            $macamAtribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['macamAtribut'];
-            
-            $arrayNamaBagianAttribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['arrayNamaBagianAttribut'];
-
-        }else{              //kalau tidak maka proses decision di stop
-
-            $kurang  = $itterasi['jml'][0];
-
-            $cukup  = $itterasi['jml'][1];
-
-            $lebih  = $itterasi['jml'][2];
-
-            $array = [$kurang,$cukup,$lebih];
-
-            //persentasenya
-            $jumlahTerbesar = max([$kurang,$cukup,$lebih]);
-            $indexKe        = array_search($jumlahTerbesar,$array);
-            $jumlahTotal    = array_sum($itterasi['jml']);
-
-            if($jumlahTotal > 0 ){
-                $persentase = $jumlahTerbesar / $jumlahTotal * 100;
-
-                if($indexKe == 0){
-                    $macam = 'Kurang';
-                }elseif($indexKe == 1){
-                    $macam = 'Cukup';
-                }else{
-                    $macam = 'Lebih';
-                }
-
-                $macamAtribut = $macam . ' ' . round($persentase,2) . '%';
-            }else{
-                $macamAtribut = 'Tidak Ada';
-            }
-
-            $arrayNamaBagianAttribut = [];
-
-        }
-
-        return compact('macamAtribut','arrayNamaBagianAttribut');
-    }
-
-    public function CreateTree()
-    {
-
-        //Itterasi ke 1 ==================================================================
-        $itterasi[1] = $this->Algoritma(''); //array data awal (semua data)
-
-        // mengambil nilai yang ada sebanyak
-        // bandingkan gainnya
-        // ambil atribute dengan gain tertinggi
-        // Buat Cabang
-
-        $akar[1] = $macamAtribut[1] = $this->GainTertinggi('',$itterasi[1])['macamAtribut'];                        //akar pertama
-        
-        $arrayNamaBagianAttribut[1] =  $this->GainTertinggi($macamAtribut[1],$itterasi[1])['arrayNamaBagianAttribut'];
-
-        // Iterasi ke 2 ======================================================================================
-        for ($i=0; $i < count($arrayNamaBagianAttribut[1]); $i++) { 
-
-            //membagi data menjadi 3 sesuai atribut
-            $hasilAlgoritma[2][$i] = $this->ChooseData($itterasi[1]['dataPatokan'],$macamAtribut[1],$arrayNamaBagianAttribut[1][$i]);
-
-            //dari masing masing data yang sudah dibagi, dipecah datanya sesuai sifatnya masing"
-            $itterasi[2][$i] = $this->Algoritma($hasilAlgoritma[2][$i]);
-            
-            $akar[2][$i] = $macamAtribut[2][$i] = $this->GainTertinggi($macamAtribut[1],$itterasi[2][$i])['macamAtribut'];
-        
-            $arrayNamaBagianAttribut[2][$i] =  $this->GainTertinggi($macamAtribut[1],$itterasi[2][$i])['arrayNamaBagianAttribut'];
-
-
-            // Iterasi ke 3 ======================================================================================
-            for ($j=0; $j < count($arrayNamaBagianAttribut[2][$i]); $j++) { 
-
-                $hasilAlgoritma[3][$i][$j] = $this->ChooseData($itterasi[2][$i]['dataPatokan'],$macamAtribut[2][$i],$arrayNamaBagianAttribut[2][$i][$j]);
-        
-                $itterasi[3][$i][$j] = $this->Algoritma($hasilAlgoritma[3][$i][$j]);
-
-                $akar[3][$i][$j] = $macamAtribut[3][$i][$j] = $this->GainTertinggi($macamAtribut[2],$itterasi[3][$i][$j])['macamAtribut'];
-        
-                $arrayNamaBagianAttribut[3][$i][$j] =  $this->GainTertinggi($macamAtribut[2],$itterasi[3][$i][$j])['arrayNamaBagianAttribut'];
+                $dataPatokan = $this->ChooseData('','semua','');
                 
+                // $dataPatokan = $this->selection($dataPatokan)['psedikit'];
+                // $dataPatokan = $this->selection($dataPatokan)['brendah'];
+                // $dataPatokan = $this->selection($dataPatokan)['dataSedangq'];
+                // $dataPatokan = $this->selection($dataPatokan)['gbanyak'];                    
 
-                // Iterasi ke 4 ======================================================================================
-                for ($k=0; $k < count($arrayNamaBagianAttribut[3][$i][$j]); $k++) { 
-    
-                    $hasilAlgoritma[4][$i][$j][$k] = $this->ChooseData($itterasi[3][$i][$j]['dataPatokan'],$macamAtribut[3][$i][$j],$arrayNamaBagianAttribut[3][$i][$j][$k]); 
-                    
-                    $itterasi[4][$i][$j][$k] = $this->Algoritma($hasilAlgoritma[4][$i][$j][$k]);
-    
-                    $akar[4][$i][$j][$k] = $macamAtribut[4][$i][$j][$k] = $this->GainTertinggi($macamAtribut[3],$itterasi[4][$i][$j][$k])['macamAtribut'];
-            
-                    $arrayNamaBagianAttribut[4][$i][$j][$k] =  $this->GainTertinggi($macamAtribut[3],$itterasi[4][$i][$j][$k])['arrayNamaBagianAttribut'];
+                // dd($dataPatokan);
 
+            // ====================================================================
 
-                    // Iterasi ke 5 ======================================================================================
-                    for ($l=0; $l < count($arrayNamaBagianAttribut[4][$i][$j][$k]); $l++) { 
-    
-                        $hasilAlgoritma[5][$i][$j][$k][$l] = $this->ChooseData($itterasi[4][$i][$j][$k]['dataPatokan'],$macamAtribut[4][$i][$j][$k],$arrayNamaBagianAttribut[4][$i][$j][$k][$l]); 
-                        
-                        $itterasi[5][$i][$j][$k][$l] = $this->Algoritma($hasilAlgoritma[5][$i][$j][$k][$l]);
-        
-                        $akar[5][$i][$j][$k][$l] = $macamAtribut[5][$i][$j][$k][$l] = $this->GainTertinggi($macamAtribut[4],$itterasi[5][$i][$j][$k][$l])['macamAtribut'];
-                
-                        $arrayNamaBagianAttribut[5][$i][$j][$k][$l] =  $this->GainTertinggi($macamAtribut[4],$itterasi[5][$i][$j][$k][$l])['arrayNamaBagianAttribut'];
-                        
-                    }
-                }
-            }
+            $jmlKel   = count($dataPatokan);
+            $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
+            $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
+            $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
+
+            // Semua data di Entropy
+            $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
+
+            // ========================================================================================================
+
+            // Bandwidth
+                $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Jumlah Penghuni
+                $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Banyak Gadget
+                $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Nilai Range
+                $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
+
+        }else{
+            // dd($dataPatokan);
+
+            $jmlKel   = count($dataPatokan);
+            $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
+            $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
+            $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
+
+            // Semua data di Entropy
+            $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
+
+            // ========================================================================================================
+
+            // Bandwidth
+                $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Jumlah Penghuni
+                $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Banyak Gadget
+                $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
+
+            // Nilai Range
+                $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
         }
 
-        return compact('itterasi','akar','arrayNamaBagianAttribut');
-    }
-
-    public function paketTerbaik()
-    {
-        // PAket Data Rendah terbaik
-        $paketDataRendah = internet_keluarga::where('bandwidth','<=',20)->sortBy("biayaBulanan");
-
-        // Paket Data Sedang Terbaik
-        $paketDataSedang = internet_keluarga::where('bandwidth','<=',40)->where('bandwidth','>',20)->sortBy("biayaBulanan");
-
-        // Paket Data Tinggi Terbaik
-        $paketDataTinggi = internet_keluarga::where('bandwidth','>',40)->sortBy("biayaBulanan");
-    }
-
-    public function hasilDecisiontree(Request $request)
-    {
-        
-		$namaData = session()->get( 'namaData' );
-        $deskripsiData = session()->get( 'deskripsiData' );
-        
-        set_time_limit(1000000000);
-        $dataAlgoritma = $this->Algoritma('');
-        $dataCreateTree = $this->CreateTree();
-
-        $hasilDecisiontree = new hasilDecisiontree;
-
-        //untuk table
-        $hasilDecisiontree->jmlKel          = $dataAlgoritma['jmlKel'];
-        $hasilDecisiontree->jml             = serialize($dataAlgoritma['jml']);
-        $hasilDecisiontree->totEntropykel   = $dataAlgoritma['totEntropykel'];
-        $hasilDecisiontree->hasil           = serialize($dataAlgoritma['hasil']);
-        //untuk bagan
-        $hasilDecisiontree->serializeAkar = serialize($dataCreateTree['akar']);
-        $hasilDecisiontree->serializeArrayNamaBagianAttribut = serialize($dataCreateTree['arrayNamaBagianAttribut']);
-        
-		$hasilDecisiontree->namaHasilDecisionTree = $namaData;
-        $hasilDecisiontree->deskripsi = $deskripsiData;
-
-        $hasilDecisiontree->user_id = Session::get('user_id');;   //Tangkap id user dengan session
-        
-        $hasilDecisiontree->save();
-
-        $this->bestProvider($hasilDecisiontree);      //ambil provider terbaik buat list
-        
-		// Empty database
-		foreach (internet_keluarga::all() as $e) { $e->delete(); }
-
-        return redirect('/')->with(['success' => 'berhasil Membuat Pola Prediksi']);
-    }
-
-    public function bestProvider($hasilDecisiontree)
-    {
-        // ambil semua data, di pisah berdasar kategari
-            $pbrendah = internet_keluarga::where('bandwidth','<=',20)->get();
-            $pbsedang = internet_keluarga::where('bandwidth','<=',40)->where('bandwidth','>',20)->get();
-            $pbtinggi = internet_keluarga::where('bandwidth','>',40)->get();
-
-        //rendah terbaik
-
-            $providerTerbaik[0] = $this->tigaTerbaik($pbrendah);
-
-        //sedang terbaik
-
-            $providerTerbaik[1] = $this->tigaTerbaik($pbsedang);
-
-        //tinggi terbaik
-            
-            $providerTerbaik[2] = $this->tigaTerbaik($pbtinggi);
-
-        // dd($providerTerbaik);
-
-        // dd('asda');
-
-        //insert kedalam database
-            for ($i=0; $i < count($providerTerbaik); $i++) { 
-                for ($j=0; $j < count($providerTerbaik[$i]); $j++) { 
-                    $best_provider = new best_provider;
-                    $best_provider->namaprovider    = $providerTerbaik[$i][$j]['provider'];
-                    
-                    if ($i == 1) {
-                        $best_provider->kategori = 'sedang';
-                    } else if($i == 2){
-                        $best_provider->kategori = 'tinggi';
-                    }else {
-                        $best_provider->kategori = 'rendah';
-                    }
-                    
-                    $best_provider->bandwidth       = $providerTerbaik[$i][$j]['bandwidth'];
-                    $best_provider->harga           = $providerTerbaik[$i][$j]['biayaBulanan'];
-                    $best_provider->hasilDecisiontree()->associate($hasilDecisiontree);
-                    $best_provider->save();
-                }
-            }
-
-    }
-
-    public function tigaTerbaik($dpb)
-    {
-        foreach ($dpb as $key => $value) {
-            $a[$value['id']] = [$value['biayaBulanan'] / $value['bandwidth'], $value['id']];
-        }
-
-        asort($a); //sort value tapi index tetap sesuai sebelumnya
-
-        $best3 = array_slice($a,0,3); //ambil 3 terbaik
-
-        for ($i=0; $i < 3; $i++) { 
-            $bestdpb[$i] = internet_keluarga::where('id',$best3[$i][1])->first();
-        }
-
-        return $bestdpb;
+        return compact('dataPatokan','jmlKel','jml','totEntropykel','hasil');
     }
 
     public function ChooseData($dataItterasi,$macamAtribut,$arrayNamaBagianAttribut)
     {
         //disini yang diutak atik ================================================================================
         // dd($dataItterasi);
-            // catatan: komentari yang datanya tidak ingin digunakan, hanya bisa menggunakan satu data.
+        // catatan: komentari yang datanya tidak ingin digunakan, hanya bisa menggunakan satu data.
 
-                // dd($dataPatokan = $this->selection($dataItterasi));
+            // dd($dataPatokan = $this->selection($dataItterasi));
 
-                //Itterasi pertama pasti menggunakan semua data
-                if($macamAtribut == 'semua'){
-                    $dataPatokan = $this->selection('')['dataPatokan'];
+            //Itterasi pertama pasti menggunakan semua data
+            if($macamAtribut == 'semua'){
+                $dataPatokan = $this->selection('')['dataPatokan'];
+            }
+
+            //Sorting Bandwidth
+            if ($macamAtribut == 'Bandwidth') {
+                if ($arrayNamaBagianAttribut == 'Rendah') {
+                    $dataPatokan = $this->selection($dataItterasi)['brendah'];
+                }elseif($arrayNamaBagianAttribut == 'Sedang'){
+                    $dataPatokan = $this->selection($dataItterasi)['bsedang'];
+                }else{
+                    $dataPatokan = $this->selection($dataItterasi)['btinggi'];
+
                 }
+            }
 
-                //Sorting Bandwidth
-                if ($macamAtribut == 'Bandwidth') {
-                    if ($arrayNamaBagianAttribut == 'Rendah') {
-                        $dataPatokan = $this->selection($dataItterasi)['brendah'];
-                    }elseif($arrayNamaBagianAttribut == 'Sedang'){
-                        $dataPatokan = $this->selection($dataItterasi)['bsedang'];
-                    }else{
-                        $dataPatokan = $this->selection($dataItterasi)['btinggi'];
-
-                    }
+            //Sorting jumlah penghuni
+            if ($macamAtribut == 'Jumlah Penghuni') {
+                if ($arrayNamaBagianAttribut == 'Sedikit') {
+                    $dataPatokan = $this->selection($dataItterasi)['psedikit'];
+                }elseif($arrayNamaBagianAttribut == 'Normal'){
+                    $dataPatokan = $this->selection($dataItterasi)['pnormal'];
+                }else{
+                    $dataPatokan = $this->selection($dataItterasi)['pbanyak'];
                 }
+            }
 
-                //Sorting jumlah penghuni
-                if ($macamAtribut == 'Jumlah Penghuni') {
-                    if ($arrayNamaBagianAttribut == 'Sedikit') {
-                        $dataPatokan = $this->selection($dataItterasi)['psedikit'];
-                    }elseif($arrayNamaBagianAttribut == 'Normal'){
-                        $dataPatokan = $this->selection($dataItterasi)['pnormal'];
-                    }else{
-                        $dataPatokan = $this->selection($dataItterasi)['pbanyak'];
-                    }
+            //sorting banyak gadget
+            if ($macamAtribut == 'Banyak Gadget') {
+                if ($arrayNamaBagianAttribut == 'Sedikit') {
+                    $dataPatokan = $this->selection($dataItterasi)['gsedikit'];
+                }elseif($arrayNamaBagianAttribut == 'Sedang'){
+                    $dataPatokan = $this->selection($dataItterasi)['gsedang'];
+                }else{
+                    $dataPatokan = $this->selection($dataItterasi)['gbanyak'];
                 }
+            }
 
-                //sorting banyak gadget
-                if ($macamAtribut == 'Banyak Gadget') {
-                    if ($arrayNamaBagianAttribut == 'Sedikit') {
-                        $dataPatokan = $this->selection($dataItterasi)['gsedikit'];
-                    }elseif($arrayNamaBagianAttribut == 'Sedang'){
-                        $dataPatokan = $this->selection($dataItterasi)['gsedang'];
-                    }else{
-                        $dataPatokan = $this->selection($dataItterasi)['gbanyak'];
-                    }
+            // Sorting Range
+            if ($macamAtribut == 'Range Penggunaan') {
+                if ($arrayNamaBagianAttribut == 'Ringan') {
+                    $dataPatokan = $this->selection($dataItterasi)['dataRinganq']; 
+                }elseif($arrayNamaBagianAttribut == 'Sedang'){
+                    $dataPatokan = $this->selection($dataItterasi)['dataSedangq']; 
+                }else{
+                    $dataPatokan = $this->selection($dataItterasi)['dataBeratq'];
                 }
-
-                // Sorting Range
-                if ($macamAtribut == 'Range Penggunaan') {
-                    if ($arrayNamaBagianAttribut == 'Ringan') {
-                        $dataPatokan = $this->selection($dataItterasi)['dataRinganq']; 
-                    }elseif($arrayNamaBagianAttribut == 'Sedang'){
-                        $dataPatokan = $this->selection($dataItterasi)['dataSedangq']; 
-                    }else{
-                        $dataPatokan = $this->selection($dataItterasi)['dataBeratq'];
-                    }
-                }                    
+            }                    
 
 
-            //======================================================================================================== 
+        //======================================================================================================== 
 
-            return $dataPatokan;
+        return $dataPatokan;
     }
-    
+
     public function Selection($dataItterasi)
     {
         // Semua Sorting Sorting:
@@ -423,76 +250,6 @@ class perhitunganController extends Controller
         return compact('dataPatokan','brendah','bsedang','btinggi','psedikit','pnormal','pbanyak','gsedikit','gsedang','gbanyak','dataRinganq','dataSedangq','dataBeratq');
     }
 
-    public function Algoritma($dataPatokan)
-    {
-
-        //Oper Data Patokan dari selection
-            if($dataPatokan == ''){
-
-                //Pengecekan masukkan kebawah =========================================
-
-                    $dataPatokan = $this->ChooseData('','semua','');
-                    
-                    // $dataPatokan = $this->selection($dataPatokan)['psedikit'];
-                    // $dataPatokan = $this->selection($dataPatokan)['brendah'];
-                    // $dataPatokan = $this->selection($dataPatokan)['dataSedangq'];
-                    // $dataPatokan = $this->selection($dataPatokan)['gbanyak'];                    
-
-                    // dd($dataPatokan);
-
-                // ====================================================================
-
-                $jmlKel   = count($dataPatokan);
-                $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
-                $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
-                $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
-
-                // Semua data di Entropy
-                $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
-
-                // ========================================================================================================
-
-                // Bandwidth
-                    $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
-
-                // Jumlah Penghuni
-                    $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
-
-                // Banyak Gadget
-                    $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
-
-                // Nilai Range
-                    $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
-
-            }else{
-                // dd($dataPatokan);
-
-                $jmlKel   = count($dataPatokan);
-                $jml[0]   = count($dataPatokan->where('kesimpulan','kurang'));
-                $jml[1]   = count($dataPatokan->where('kesimpulan','cukup'));
-                $jml[2]   = count($dataPatokan->where('kesimpulan','lebih'));
-
-                // Semua data di Entropy
-                $totEntropykel = $this->Entropy($jml[0],$jml[1],$jml[2],$jmlKel);
-
-                // ========================================================================================================
-
-                // Bandwidth
-                    $hasil[0] = $this->Bandwidth($jmlKel,$totEntropykel,$dataPatokan);
-
-                // Jumlah Penghuni
-                    $hasil[1] = $this->JumlahPenghuni($jmlKel,$totEntropykel,$dataPatokan);
-
-                // Banyak Gadget
-                    $hasil[2] = $this->BanyakGadget($jmlKel,$totEntropykel,$dataPatokan);
-
-                // Nilai Range
-                    $hasil[3] = $this->NilaiRange($jmlKel,$totEntropykel,$dataPatokan);
-            }
-
-        return compact('dataPatokan','jmlKel','jml','totEntropykel','hasil');
-    }
-    
     public function Bandwidth($jmlKel,$totEntropykel,$dataPatokan)
     {
         $macamAtribut = 'Bandwidth';
@@ -798,4 +555,236 @@ class perhitunganController extends Controller
         return $gain = $totEntropykel - array_sum($nilai);
 
     }
+
+
+// Membuat Tree ===================================================================
+    public function GainTertinggi($macamAtribut,$itterasi)
+    {
+        
+        $gainTeringgi = max(array_column($itterasi['hasil'],'gain'));    //Membandingkan masing masing gain atribut
+
+        if($gainTeringgi > 0){    //cek apakah gain tertinggi lebih dari nol
+
+            for($i = 0 ; $i < count($itterasi['hasil']); $i++){
+                if($itterasi['hasil'][$i]['gain'] == $gainTeringgi){
+                    $indexAtrributGainTertinggi = $i;                       //ambil index array yang memiliki gain tertinggi
+                }
+            }
+
+            $macamAtribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['macamAtribut'];
+            
+            $arrayNamaBagianAttribut = $itterasi['hasil'][$indexAtrributGainTertinggi]['arrayNamaBagianAttribut'];
+
+        }else{              //kalau tidak maka proses decision di stop
+
+            $kurang  = $itterasi['jml'][0];
+
+            $cukup  = $itterasi['jml'][1];
+
+            $lebih  = $itterasi['jml'][2];
+
+            $array = [$kurang,$cukup,$lebih];
+
+            //persentasenya
+            $jumlahTerbesar = max([$kurang,$cukup,$lebih]);
+            $indexKe        = array_search($jumlahTerbesar,$array);
+            $jumlahTotal    = array_sum($itterasi['jml']);
+
+            if($jumlahTotal > 0 ){
+                $persentase = $jumlahTerbesar / $jumlahTotal * 100;
+
+                if($indexKe == 0){
+                    $macam = 'Kurang';
+                }elseif($indexKe == 1){
+                    $macam = 'Cukup';
+                }else{
+                    $macam = 'Lebih';
+                }
+
+                $macamAtribut = $macam . ' ' . round($persentase,2) . '%';
+            }else{
+                $macamAtribut = 'Tidak Ada';
+            }
+
+            $arrayNamaBagianAttribut = [];
+
+        }
+
+        return compact('macamAtribut','arrayNamaBagianAttribut');
+    }
+
+    public function CreateTree()
+    {
+
+        //Itterasi ke 1 ==================================================================
+        $itterasi[1] = $this->Algoritma(''); //array data awal (semua data)
+
+        // mengambil nilai yang ada sebanyak
+        // bandingkan gainnya
+        // ambil atribute dengan gain tertinggi
+        // Buat Cabang
+
+        $akar[1] = $macamAtribut[1] = $this->GainTertinggi('',$itterasi[1])['macamAtribut'];                        //akar pertama
+        
+        $arrayNamaBagianAttribut[1] =  $this->GainTertinggi($macamAtribut[1],$itterasi[1])['arrayNamaBagianAttribut'];
+
+        // Iterasi ke 2 ======================================================================================
+        for ($i=0; $i < count($arrayNamaBagianAttribut[1]); $i++) { 
+
+            //membagi data menjadi 3 sesuai atribut
+            $hasilAlgoritma[2][$i] = $this->ChooseData($itterasi[1]['dataPatokan'],$macamAtribut[1],$arrayNamaBagianAttribut[1][$i]);
+
+            //dari masing masing data yang sudah dibagi, dipecah datanya sesuai sifatnya masing"
+            $itterasi[2][$i] = $this->Algoritma($hasilAlgoritma[2][$i]);
+            
+            $akar[2][$i] = $macamAtribut[2][$i] = $this->GainTertinggi($macamAtribut[1],$itterasi[2][$i])['macamAtribut'];
+        
+            $arrayNamaBagianAttribut[2][$i] =  $this->GainTertinggi($macamAtribut[1],$itterasi[2][$i])['arrayNamaBagianAttribut'];
+
+
+            // Iterasi ke 3 ======================================================================================
+            for ($j=0; $j < count($arrayNamaBagianAttribut[2][$i]); $j++) { 
+
+                $hasilAlgoritma[3][$i][$j] = $this->ChooseData($itterasi[2][$i]['dataPatokan'],$macamAtribut[2][$i],$arrayNamaBagianAttribut[2][$i][$j]);
+        
+                $itterasi[3][$i][$j] = $this->Algoritma($hasilAlgoritma[3][$i][$j]);
+
+                $akar[3][$i][$j] = $macamAtribut[3][$i][$j] = $this->GainTertinggi($macamAtribut[2],$itterasi[3][$i][$j])['macamAtribut'];
+        
+                $arrayNamaBagianAttribut[3][$i][$j] =  $this->GainTertinggi($macamAtribut[2],$itterasi[3][$i][$j])['arrayNamaBagianAttribut'];
+                
+
+                // Iterasi ke 4 ======================================================================================
+                for ($k=0; $k < count($arrayNamaBagianAttribut[3][$i][$j]); $k++) { 
+    
+                    $hasilAlgoritma[4][$i][$j][$k] = $this->ChooseData($itterasi[3][$i][$j]['dataPatokan'],$macamAtribut[3][$i][$j],$arrayNamaBagianAttribut[3][$i][$j][$k]); 
+                    
+                    $itterasi[4][$i][$j][$k] = $this->Algoritma($hasilAlgoritma[4][$i][$j][$k]);
+    
+                    $akar[4][$i][$j][$k] = $macamAtribut[4][$i][$j][$k] = $this->GainTertinggi($macamAtribut[3],$itterasi[4][$i][$j][$k])['macamAtribut'];
+            
+                    $arrayNamaBagianAttribut[4][$i][$j][$k] =  $this->GainTertinggi($macamAtribut[3],$itterasi[4][$i][$j][$k])['arrayNamaBagianAttribut'];
+
+
+                    // Iterasi ke 5 ======================================================================================
+                    for ($l=0; $l < count($arrayNamaBagianAttribut[4][$i][$j][$k]); $l++) { 
+    
+                        $hasilAlgoritma[5][$i][$j][$k][$l] = $this->ChooseData($itterasi[4][$i][$j][$k]['dataPatokan'],$macamAtribut[4][$i][$j][$k],$arrayNamaBagianAttribut[4][$i][$j][$k][$l]); 
+                        
+                        $itterasi[5][$i][$j][$k][$l] = $this->Algoritma($hasilAlgoritma[5][$i][$j][$k][$l]);
+        
+                        $akar[5][$i][$j][$k][$l] = $macamAtribut[5][$i][$j][$k][$l] = $this->GainTertinggi($macamAtribut[4],$itterasi[5][$i][$j][$k][$l])['macamAtribut'];
+                
+                        $arrayNamaBagianAttribut[5][$i][$j][$k][$l] =  $this->GainTertinggi($macamAtribut[4],$itterasi[5][$i][$j][$k][$l])['arrayNamaBagianAttribut'];
+                        
+                    }
+                }
+            }
+        }
+
+        return compact('itterasi','akar','arrayNamaBagianAttribut');
+    }
+
+// Provider terbaik ==============================================================
+    public function bestProvider($hasilDecisiontree)
+    {
+        // ambil semua data, di pisah berdasar kategari
+            $pbrendah = internet_keluarga::where('bandwidth','<=',20)->get();
+            $pbsedang = internet_keluarga::where('bandwidth','<=',40)->where('bandwidth','>',20)->get();
+            $pbtinggi = internet_keluarga::where('bandwidth','>',40)->get();
+
+        //rendah terbaik
+
+            $providerTerbaik[0] = $this->tigaTerbaik($pbrendah);
+
+        //sedang terbaik
+
+            $providerTerbaik[1] = $this->tigaTerbaik($pbsedang);
+
+        //tinggi terbaik
+            
+            $providerTerbaik[2] = $this->tigaTerbaik($pbtinggi);
+
+        // dd($providerTerbaik);
+
+        // dd('asda');
+
+        //insert kedalam database
+            for ($i=0; $i < count($providerTerbaik); $i++) { 
+                for ($j=0; $j < count($providerTerbaik[$i]); $j++) { 
+                    $best_provider = new best_provider;
+                    $best_provider->namaprovider    = $providerTerbaik[$i][$j]['provider'];
+                    
+                    if ($i == 1) {
+                        $best_provider->kategori = 'sedang';
+                    } else if($i == 2){
+                        $best_provider->kategori = 'tinggi';
+                    }else {
+                        $best_provider->kategori = 'rendah';
+                    }
+                    
+                    $best_provider->bandwidth       = $providerTerbaik[$i][$j]['bandwidth'];
+                    $best_provider->harga           = $providerTerbaik[$i][$j]['biayaBulanan'];
+                    $best_provider->hasilDecisiontree()->associate($hasilDecisiontree);
+                    $best_provider->save();
+                }
+            }
+
+    }
+    
+    public function tigaTerbaik($dpb)
+    {
+        foreach ($dpb as $key => $value) {
+            $a[$value['id']] = [$value['biayaBulanan'] / $value['bandwidth'], $value['id']];
+        }
+
+        asort($a); //sort value tapi index tetap sesuai sebelumnya
+
+        $best3 = array_slice($a,0,3); //ambil 3 terbaik
+
+        for ($i=0; $i < 3; $i++) { 
+            $bestdpb[$i] = internet_keluarga::where('id',$best3[$i][1])->first();
+        }
+
+        return $bestdpb;
+    }
+
+// Save Ke Database
+    public function hasilDecisiontree(Request $request)
+    {
+        
+		$namaData = session()->get( 'namaData' );
+        $deskripsiData = session()->get( 'deskripsiData' );
+        
+        set_time_limit(1000000000);
+        $dataAlgoritma = $this->Algoritma('');
+        $dataCreateTree = $this->CreateTree();
+
+        $hasilDecisiontree = new hasilDecisiontree;
+
+        //untuk table
+        $hasilDecisiontree->jmlKel          = $dataAlgoritma['jmlKel'];
+        $hasilDecisiontree->jml             = serialize($dataAlgoritma['jml']);
+        $hasilDecisiontree->totEntropykel   = $dataAlgoritma['totEntropykel'];
+        $hasilDecisiontree->hasil           = serialize($dataAlgoritma['hasil']);
+
+        //untuk bagan
+        $hasilDecisiontree->serializeAkar = serialize($dataCreateTree['akar']);
+        $hasilDecisiontree->serializeArrayNamaBagianAttribut = serialize($dataCreateTree['arrayNamaBagianAttribut']);
+        
+		$hasilDecisiontree->namaHasilDecisionTree = $namaData;
+        $hasilDecisiontree->deskripsi = $deskripsiData;
+
+        $hasilDecisiontree->user_id = Session::get('user_id');;   //Tangkap id user dengan session
+        
+        $hasilDecisiontree->save();
+
+        $this->bestProvider($hasilDecisiontree);      //ambil provider terbaik buat list
+        
+		// Empty database
+		foreach (internet_keluarga::all() as $e) { $e->delete(); }
+
+        return redirect('/')->with(['success' => 'berhasil Membuat Pola Prediksi']);
+    }
+
 }

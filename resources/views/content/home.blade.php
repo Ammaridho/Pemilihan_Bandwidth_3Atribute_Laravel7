@@ -116,8 +116,8 @@
                         <th scope="col">Kurang</th>
                         <th scope="col">Cukup</th>
                         <th scope="col">Lebih</th>
-                        {{-- <th scope="col">Entropy</th>
-                        <th scope="col">Gain</th> --}}
+                        <th scope="col">Entropy</th>
+                        <th scope="col">Gain</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -129,7 +129,7 @@
                         <td>{{$jml[0]}}</td>
                         <td>{{$jml[1]}}</td>
                         <td>{{$jml[2]}}</td>
-                        {{-- <td>{{$totEntropykel}}</td> --}}
+                        <td>{{$totEntropykel}}</td>
                         <td></td>
                       </tr>      
         
@@ -137,7 +137,7 @@
                         <tr>
                           <th scope="row">{{$hasil[$i]['macamAtribut']}}</th>
                           <th colspan="6"></th>
-                          {{-- <th>{{$hasil[$i]['gain']}}</th> --}}
+                          <th>{{$hasil[$i]['gain']}}</th>
                         </tr>                
         
                         @for ($j = 0; $j < count($hasil[$i]['arrayNamaBagianAttribut']); $j++)
@@ -147,7 +147,7 @@
                           <td>{{$hasil[$i]['sortingTarget'][$j][0]}}</td>
                           <td>{{$hasil[$i]['sortingTarget'][$j][1]}}</td>
                           <td>{{$hasil[$i]['sortingTarget'][$j][2]}}</td>
-                          {{-- <td>{{$hasil[$i]['entropy'][$j]}}</td> --}}
+                          <td>{{$hasil[$i]['entropy'][$j]}}</td>
                         </tr>
                         @endfor
                       @endfor
@@ -169,8 +169,9 @@
                 <p class="font-weight-bold text-white">Berikut adalah pola hasil decision Tree C4.5</p>
               </div>
               <div class="col-12">
+                <div class="frametree">
                   <div class="tree">
-                      <ul>
+                    <ul>
                           <li> <a href="#"><span>{{$akar[1]}}</span></a>
                               @if (isset($akar[2]))
                                   <ul>
@@ -206,9 +207,10 @@
                           </li>
                       </ul>
                   </div>
+                </div>
               </div>
             </div>
-            <div class="container">
+            <div class="container mt-5">
               <div class="row">
                 <div class="col text-center">
                   <h3 class="text-white mb-3" >Ketentuan membaca alur :</h3>

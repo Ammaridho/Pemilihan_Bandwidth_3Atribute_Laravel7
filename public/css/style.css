@@ -95,9 +95,13 @@ body{
 		background-color: #2B2D42;
 	}
 	
+	.frametree{
+		overflow-x: scroll;
+		position: relative;
+	}
 
 	.tree {
-		width: 100%;
+		width: 130vw;
 		height: auto;
 		text-align: center;
 	}
