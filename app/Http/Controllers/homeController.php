@@ -80,6 +80,8 @@ class homeController extends Controller
                     return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','simpulanprediksi','best_provider','best_providerrekomendasi','listAkun'));
                 }
 
+                
+
                 return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','best_provider','listAkun'));
             }
 

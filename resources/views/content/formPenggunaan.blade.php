@@ -19,7 +19,7 @@
           </div> --}}
 
           <div class="form-group col-12">
-            <label for="banyakGadget{{$i}}">Penghuni {{$i}}</label>
+            <label class="text-center" for="banyakGadget{{$i}}">Penghuni {{$i}}</label>
             <input id="banyakgadget{{$i}}" type="number" name="banyakGadget{{$i}}" class="banyakgadget form-control" placeholder="" min="0" max="20" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" required>
           </div>
         </div>

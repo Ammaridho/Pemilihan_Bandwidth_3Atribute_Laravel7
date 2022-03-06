@@ -13,6 +13,14 @@ $('#signup #username, #signup #password, #signup #password_confirmation').on('ke
     }
 })
 
+$('#closeFormLogin').on('click', function () {
+    $('#buttonLogin').trigger("click");
+})
+$('#closeHasilPrediksi').on('click', function () {
+    $('#buttonBuatPolaPrediksi').trigger("click");
+    // alert('bisa');
+})
+
 //logout
 function signout() {
     var confirmation = confirm("Yakin Keluar?");

@@ -116,8 +116,8 @@
                         <th scope="col">Kurang</th>
                         <th scope="col">Cukup</th>
                         <th scope="col">Lebih</th>
-                        <th scope="col">Entropy</th>
-                        <th scope="col">Gain</th>
+                        {{-- <th scope="col">Entropy</th>
+                        <th scope="col">Gain</th> --}}
                       </tr>
                     </thead>
                     <tbody>
@@ -129,7 +129,7 @@
                         <td>{{$jml[0]}}</td>
                         <td>{{$jml[1]}}</td>
                         <td>{{$jml[2]}}</td>
-                        <td>{{$totEntropykel}}</td>
+                        {{-- <td>{{$totEntropykel}}</td> --}}
                         <td></td>
                       </tr>      
         
@@ -137,7 +137,7 @@
                         <tr>
                           <th scope="row">{{$hasil[$i]['macamAtribut']}}</th>
                           <th colspan="6"></th>
-                          <th>{{$hasil[$i]['gain']}}</th>
+                          {{-- <th>{{$hasil[$i]['gain']}}</th> --}}
                         </tr>                
         
                         @for ($j = 0; $j < count($hasil[$i]['arrayNamaBagianAttribut']); $j++)
@@ -147,7 +147,7 @@
                           <td>{{$hasil[$i]['sortingTarget'][$j][0]}}</td>
                           <td>{{$hasil[$i]['sortingTarget'][$j][1]}}</td>
                           <td>{{$hasil[$i]['sortingTarget'][$j][2]}}</td>
-                          <td>{{$hasil[$i]['entropy'][$j]}}</td>
+                          {{-- <td>{{$hasil[$i]['entropy'][$j]}}</td> --}}
                         </tr>
                         @endfor
                       @endfor
@@ -213,7 +213,7 @@
             <div class="container mt-5">
               <div class="row">
                 <div class="col text-center">
-                  <h3 class="text-white mb-3" >Ketentuan membaca alur :</h3>
+                  <h3 class="text-white mb-3" >Ketentuan membaca alur diagram diatas :</h3>
                 </div>
               </div>
               <div class="row">
@@ -427,7 +427,7 @@
                             <div class="form-row mt-5 " id="formpenghuni">
                               <div class="form-col col-md-2 mb-4">
                                 <div class="form-group">
-                                  <label for="jumlahPenghuni">Jumlah penghuni</label>
+                                  <label for="jumlahPenghuni">Jumlah penghuni yang memiliki Gadget</label>
                                   <input id="jumlahpenghuni" type="number" maxlength="2" name="jumlahPenghuni" class="form-control" placeholder="Jumlah penghuni.." min="0" max="30" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>
                                 </div>
                               </div>
@@ -595,7 +595,7 @@
                             <div class="form-row mt-5 " id="formpenghuni">
                               <div class="form-col col-md-2 mb-4">
                                 <div class="form-group">
-                                  <label for="jumlahPenghuni">Jumlah penghuni</label>
+                                  <label for="jumlahPenghuni">Jumlah penghuni yang memiliki Gadget</label>
                                   <input id="jumlahpenghuni" type="number" maxlength="2" name="jumlahPenghuni" class="form-control" placeholder="Jumlah penghuni.." min="0" max="30" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>
                                 </div>
                               </div>
