@@ -3,7 +3,7 @@
 @section('content')
 
   <head>
-    <link href="css/style.css"rel="stylesheet"type="text/css"/>
+    <link href="/css/style.css"rel="stylesheet"type="text/css"/>
   </head>
 
   <body>
@@ -61,7 +61,6 @@
                 @endif
               @else
                 <h4>Scroll Kebawah untuk melakukan prediksi</h4>
-                {{-- <a class="btn btn-primary" data-toggle="modal" data-target="#formlogin">Login</a> --}}
               @endif
             </div>
           </div>
@@ -268,16 +267,23 @@
             </div>
             <div class="row">
               <div class="col">
-                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Ini adalah provider terbaik berdasarkan dataset yang ada, penentuan didapat dari harga satuan bandwidth termurah</p>
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Ini adalah provider terbaik berdasarkan dataset yang ada, penentuan didapat dari harga satuan bandwidth termurah :</p>
               </div>
             </div>
-            <div class="row mt-4">
+            <div class="row">
+              <div class="col">
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Bandwidth kurang dari 21 Mbps</p>
+              </div>
+            </div>
+            <div class="row">
+              <?php $i = 0; ?>
               @foreach ($best_provider as $item)
-                <div class="col-4 p-2 justify-content-center text-center">
+                {{-- card provider --}}
+                <div class="col-sm-4 p-2 justify-content-center text-center">
                     <a href="http://www.google.com/search?q={{$item['namaprovider']}}+internet" target="_blank" >
-                    <div class="card" style="width: 18rem; height:18rem;">
+                    <div class="card" style="height:15rem;">
                       <div class="row" style="height: 70%">
-                        <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 200px;" alt="...">
+                        <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 10rem;" alt="...">
                       </div>
                       <div class="row">
                         <div class="card-body">
@@ -295,8 +301,26 @@
                     </div>
                   </a>
                 </div>
-              @endforeach
-              
+                <?php $i++; ?>
+                @if ($i == 3)
+            </div>
+            <div class="row mt-3">
+              <div class="col">
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Bandwidth 21 - 40 Mbps</p>
+              </div>
+            </div>
+            <div class="row">
+                @endif
+                @if ($i == 6)
+            </div>
+            <div class="row">
+              <div class="col mt-3">
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Bandwidth lebih dari 40 Mbps</p>
+              </div>
+            </div>
+            <div class="row">
+                @endif
+            @endforeach
             </div>
           </div>
 
@@ -364,32 +388,33 @@
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <p class="text-center font-weight-bold">Ini adalah provider terbaik dengan harga satuan bandwidth termurah</p>
+                    <p class="text-center font-weight-bold">Ini adalah provider terbaik dengan harga satuan bandwidth termurah :</p>
                   </div>
                 </div>
                 <div class="row text-center pb-5">
                   @foreach ($best_providerrekomendasi as $item)
-                    <div class="col-4 p-2 text-center">
+                    {{-- card provider --}}
+                    <div class="col-sm-4 p-2 justify-content-center text-center">
                         <a href="http://www.google.com/search?q={{$item['namaprovider']}}+internet" target="_blank" >
-                        <div class="card text-center" style="width: 18rem; height:18rem;">
-                          <div class="row" style="height: 70%">
-                            <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 200px;" alt="...">
-                          </div>
-                          <div class="row">
-                            <div class="card-body">
-                              <h5 class="card-title">{{$item['namaprovider']}}</h5>
-                              <div class="row">
-                                <div class="col">
-                                  <p class="card-text">{{$item['bandwidth']}} Mbps</p>
-                                </div>
-                                <div class="col">
-                                  <p class="card-text">Rp. {{$item['harga']}},-</p>
+                          <div class="card" style="height:15rem;">
+                            <div class="row" style="height: 70%">
+                              <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 10rem;" alt="...">
+                            </div>
+                            <div class="row">
+                              <div class="card-body">
+                                <h5 class="card-title">{{$item['namaprovider']}}</h5>
+                                <div class="row">
+                                  <div class="col">
+                                    <p class="card-text">{{$item['bandwidth']}} Mbps</p>
+                                  </div>
+                                  <div class="col">
+                                    <p class="card-text">Rp. {{$item['harga']}},-</p>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </a>
+                        </a>
                     </div>
                   @endforeach
                 </div>
@@ -480,16 +505,23 @@
             </div>
             <div class="row">
               <div class="col">
-                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Ini adalah provider terbaik berdasarkan dataset yang ada, penentuan didapat dari harga satuan bandwidth termurah</p>
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Ini adalah provider terbaik berdasarkan dataset yang ada, penentuan didapat dari harga satuan bandwidth termurah :</p>
               </div>
             </div>
-            <div class="row mt-4">
+            <div class="row">
+              <div class="col">
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Bandwidth kurang dari 21 Mbps</p>
+              </div>
+            </div>
+            <div class="row">
+              <?php $i = 0; ?>
               @foreach ($best_provider as $item)
-                <div class="col-4 p-2 justify-content-center text-center">
+                {{-- card provider --}}
+                <div class="col-sm-4 p-2 justify-content-center text-center">
                     <a href="http://www.google.com/search?q={{$item['namaprovider']}}+internet" target="_blank" >
-                    <div class="card" style="width: 18rem; height:18rem;">
+                    <div class="card" style="height:15rem;">
                       <div class="row" style="height: 70%">
-                        <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 200px;" alt="...">
+                        <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 10rem;" alt="...">
                       </div>
                       <div class="row">
                         <div class="card-body">
@@ -507,8 +539,26 @@
                     </div>
                   </a>
                 </div>
-              @endforeach
-              
+                <?php $i++; ?>
+                @if ($i == 3)
+            </div>
+            <div class="row mt-3">
+              <div class="col">
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Bandwidth 21 - 40 Mbps</p>
+              </div>
+            </div>
+            <div class="row">
+                @endif
+                @if ($i == 6)
+            </div>
+            <div class="row">
+              <div class="col mt-3">
+                <p class="text-center font-weight-bold" style="text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">Bandwidth lebih dari 40 Mbps</p>
+              </div>
+            </div>
+            <div class="row">
+                @endif
+            @endforeach
             </div>
           </div>
 
@@ -531,32 +581,33 @@
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <p class="text-center font-weight-bold">Ini adalah provider terbaik dengan harga satuan bandwidth termurah</p>
+                    <p class="text-center font-weight-bold">Ini adalah provider terbaik dengan harga satuan bandwidth termurah :</p>
                   </div>
                 </div>
                 <div class="row text-center pb-5">
                   @foreach ($best_providerrekomendasi as $item)
-                    <div class="col-4 p-2 text-center">
+                    {{-- card provider --}}
+                    <div class="col-sm-4 p-2 justify-content-center text-center">
                         <a href="http://www.google.com/search?q={{$item['namaprovider']}}+internet" target="_blank" >
-                        <div class="card text-center" style="width: 18rem; height:18rem;">
-                          <div class="row" style="height: 70%">
-                            <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 200px;" alt="...">
-                          </div>
-                          <div class="row">
-                            <div class="card-body">
-                              <h5 class="card-title">{{$item['namaprovider']}}</h5>
-                              <div class="row">
-                                <div class="col">
-                                  <p class="card-text">{{$item['bandwidth']}} Mbps</p>
-                                </div>
-                                <div class="col">
-                                  <p class="card-text">Rp. {{$item['harga']}},-</p>
+                          <div class="card" style="height:15rem;">
+                            <div class="row" style="height: 70%">
+                              <img src="img/logoprovider/{{$item['namaprovider']}}.png" class="card-img-top m-auto" style=" width: 10rem;" alt="...">
+                            </div>
+                            <div class="row">
+                              <div class="card-body">
+                                <h5 class="card-title">{{$item['namaprovider']}}</h5>
+                                <div class="row">
+                                  <div class="col">
+                                    <p class="card-text">{{$item['bandwidth']}} Mbps</p>
+                                  </div>
+                                  <div class="col">
+                                    <p class="card-text">Rp. {{$item['harga']}},-</p>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </a>
+                        </a>
                     </div>
                   @endforeach
                 </div>
