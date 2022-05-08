@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous"> --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <script src="js/jquery-3.6.0.min.js"></script>
 
-    <script src="/js/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="/img/uinjkt.png" type="png">
 
     <title>Skripsi Decision Tree C4.5</title>
   </head>
@@ -256,6 +255,7 @@
 
                             <div class="col-9 text-center">
                               <h5 class="mb-1">{{$item['namaHasilDecisionTree']}}</h5>
+                              <small class="mb-1">Akurasi : {{$item['akurasi']}}</small><br>
                               <small class="mb-1">Jumlah Data : {{$item['jmlKel']}}</small><br>
                               <small class="mb-1">{{$item['created_at']}}</small><br>
                               <small class="text-muted" >{{$item['deskripsi']}}</small>

@@ -756,7 +756,7 @@ class perhitunganController extends Controller
 		$namaData = session()->get( 'namaData' );
         $deskripsiData = session()->get( 'deskripsiData' );
         
-        set_time_limit(1000000000);
+        set_time_limit(999999999999);
         $dataAlgoritma = $this->Algoritma('');
         $dataCreateTree = $this->CreateTree();
 
@@ -779,12 +779,233 @@ class perhitunganController extends Controller
         
         $hasilDecisiontree->save();
 
+        // provider terbaik
         $this->bestProvider($hasilDecisiontree);      //ambil provider terbaik buat list
+
+        // akurasi dari pola
+
+        $idPola = hasilDecisiontree::latest()->first()->id;
+
+        // banyak data excel
+        $banyakData = internet_keluarga::count();
+
+        for ($i=1; $i <= $banyakData; $i++) { 
+            
+            // Ambil semua data
+            $dataKeluarga = internet_keluarga::join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->where('internet_keluarga.id',$i);
+            
+            // 1. Jumlah Penghuni
+            $jumlahPenghuni = $dataKeluarga->first()->jumlahPenghuni;
+
+            // 2. Banyak Gadget Perpenghuni
+                // ambil id pertama
+                $jp = $dataKeluarga->first()->data_penghuni_id;
+
+                for ($j=0; $j < $jumlahPenghuni; $j++) { 
+                    // array banyak gadget perorang
+                    $jumlahGadget[] = internet_keluarga::join('data_penghuni','internet_keluarga.id','=','data_penghuni.internet_keluarga_id')->join('detail_gadget','data_penghuni.id','=','detail_gadget.data_penghuni_id')->where('internet_keluarga.id',$i)->where('detail_gadget.data_penghuni_id',$jp+$j)->first()->banyakGadget;
+                }
+
+            // 3. Range Penggunaan
+            $rangePenggunaan = $dataKeluarga->select('detail_gadget.range')->pluck('range')->toarray();
+
+            $this->prosesCekHasil($idPola,$i,$jumlahPenghuni,$jumlahGadget,$rangePenggunaan);
+
+            $this->cekAkurasi($idPola);
+        }
         
 		// Empty database
 		foreach (internet_keluarga::all() as $e) { $e->delete(); }
 
         return redirect('/')->with(['success' => 'berhasil Membuat Pola Prediksi']);
+    }
+
+    public function cekAkurasi($idPola)
+    {
+        $hasilPrediksi = internet_keluarga::all();
+
+        $sama = 0;
+        $beda = 0;
+
+        foreach ($hasilPrediksi as $value) {
+            if($value->kesimpulan == $value->hasilPrediksi){
+                $sama++;
+            }else{
+                $beda++;
+            }
+        }
+
+        $akurasi = $sama / ($sama+$beda);
+
+        $hasilDecisiontree = hasilDecisiontree::find($idPola);
+        $hasilDecisiontree->akurasi = $akurasi;
+        $hasilDecisiontree->hasilSama = $sama;
+        $hasilDecisiontree->hasilBeda = $beda;
+        $hasilDecisiontree->save();
+
+    }
+
+    public function prosesCekHasil($idPola,$idData,$jumlahPenghuni,$jumlahGadget,$rangePenggunaan)
+    {
+
+        // $jumlahPenghuni = $jumlahPenghuni;                             // Jumlah Penghuni
+        
+        $k = 0;
+
+        // rapihkan dan store nama penghuni dan jumlah gadget
+        // for($i = 0; $i < $jumlahPenghuni; $i++ ){
+
+        //     //rapihkan data penggunaan
+        //     for ($j = 0; $j < $jumlahGadget[0]; $j++) { 
+
+        //         $a = $i; 
+        //         $a -= 1;
+        //         $rangePenggunaan = "range"."$a"."$j";
+
+        //         $semuaRange[$k] = $request->$rangePenggunaan;                  //range penggunaan masung masing gadget
+        //         $k++;
+        //     }
+        
+        // }         
+
+        // step-step:
+        // 1. Menyimpulkan Masing masing data
+
+            // Note: nilai kode kiri,tengah,kanan (0,1,2)
+
+            //Sorting Bandwidth
+            // if($bandwidth <= 20){
+            //     $bandwidth = 0;         //rendah
+            // }elseif($bandwidth <= 40){
+            //     $bandwidth = 1;         //sedang
+            // }else{
+            //     $bandwidth = 2;         //tinggi
+            // }
+
+            //Sorting jumlahPenghuni
+            if($jumlahPenghuni <= 3 ){
+                $jumlahPenghuni = 0;    //sedikit
+            }elseif($jumlahPenghuni <= 5 ){
+                $jumlahPenghuni = 1;    //normal
+            }else{
+                $jumlahPenghuni = 2;    //banyak
+            }
+            
+            //Sorting JumlahGadget
+            $jumlahGadget = array_sum($jumlahGadget);
+
+            if($jumlahGadget <= 5){
+                $jumlahGadget = 0;      //sedikit
+            }elseif($jumlahGadget <= 7){
+                $jumlahGadget = 1;      //sedang
+            }else{
+                $jumlahGadget = 2;      //banyak
+            }
+
+            //Soring Range
+            for ($i=0; $i < count($rangePenggunaan); $i++) {
+                if($rangePenggunaan[$i] == 'ringan'){
+                    $rangePenggunaan[$i] = 1;
+                }elseif($rangePenggunaan[$i] == 'sedang'){
+                    $rangePenggunaan[$i] = 2;
+                }else{
+                    $rangePenggunaan[$i] = 3;
+                }
+            }
+
+            $totalRange = array_sum($rangePenggunaan);
+
+            if($totalRange < 10 ){
+                $totalRange = 0;        //ringan
+            }elseif($totalRange <= 15){
+                $totalRange = 1;        //sedang
+            }else{
+                $totalRange = 2;        //berat
+            }
+
+            // dd($bandwidth .' '. $jumlahPenghuni .' '. $jumlahGadget .' '. $totalRange);
+
+        //proses prediksi
+        $hasilPrediksi[0] = $this->prosesPrediksi($idPola,0,$jumlahPenghuni,$jumlahGadget,$totalRange);
+        $hasilPrediksi[1] = $this->prosesPrediksi($idPola,1,$jumlahPenghuni,$jumlahGadget,$totalRange);
+        $hasilPrediksi[2] = $this->prosesPrediksi($idPola,2,$jumlahPenghuni,$jumlahGadget,$totalRange);
+
+        // ambil yang terbaik
+        if (isset($hasilPrediksi)) {
+            if (substr($hasilPrediksi[0],0,6) == 'Cukup ' || substr($hasilPrediksi[0],0,6) == 'Lebih ') {
+                $simpulanprediksi = substr($hasilPrediksi[0],0,5);
+                
+            }elseif (substr($hasilPrediksi[1],0,6) == 'Cukup ' || substr($hasilPrediksi[1],0,6) == 'Lebih ') {
+                $simpulanprediksi = substr($hasilPrediksi[1],0,5);
+
+            }elseif (substr($hasilPrediksi[2],0,6) == 'Cukup ' || substr($hasilPrediksi[2],0,6) == 'Lebih ') {
+                $simpulanprediksi = substr($hasilPrediksi[2],0,5);
+
+            }elseif (substr($hasilPrediksi[2],0,6) == 'Kurang') {
+                $simpulanprediksi = substr($hasilPrediksi[2],0,6);
+
+            }
+
+            $akurasi = internet_keluarga::find($idData);
+            $akurasi->hasilPrediksi = lcfirst($simpulanprediksi);
+            $akurasi->save();
+        }
+
+
+        // SELESAI DISINI PROSES CEK HASIL MASUK TABLE
+    }
+
+    public function prosesPrediksi($idPola,$bandwidth,$jumlahPenghuni,$jumlahGadget,$totalRange)
+    {
+        // 2. lakukan prediksi
+            // $DecisionData = app('App\Http\Controllers\perhitunganController')->CreateTree();
+
+            $DecisionData = hasilDecisiontree::find($idPola);                
+            $akar = unserialize($DecisionData->serializeAkar);
+            $arrayNamaBagianAttribut = unserialize($DecisionData->serializeArrayNamaBagianAttribut);
+            
+            //proses pengecekan data
+
+            $i = 1;
+
+            // dd($akar);
+            
+            //cek akar 1
+            do{
+                // $index = 99;
+                if($i == 1){
+                    $namaAkar = $akar[$i];
+                }elseif($i == 2){
+                    $j = $index;
+                    $namaAkar = $akar[$i][$j];
+                }elseif($i == 3){
+                    $k = $index;
+                    $namaAkar = $akar[$i][$j][$k];    //[itterasi 3][jumlah penghuni 0][bandwidth 2]
+                }elseif($i == 4){
+                    $l = $index;
+                    $namaAkar = $akar[$i][$j][$k][$l];
+                }elseif($i == 5){
+                    $m = $index;
+                    $namaAkar = $akar[$i][$j][$k][$l][$m];
+                }
+                
+                if($namaAkar == 'Bandwidth' ){
+                    $index = $bandwidth;
+                }elseif($namaAkar == 'Jumlah Penghuni'){
+                    $index = $jumlahPenghuni;
+                }elseif($namaAkar == 'Banyak Gadget'){
+                    $index = $jumlahGadget;
+                }else{
+                    $index = $totalRange;
+                }
+                // $index = 99;
+                $i++;
+
+            }while($namaAkar == 'Bandwidth' || $namaAkar == 'Jumlah Penghuni' || $namaAkar == 'Banyak Gadget' || $namaAkar == 'Range Penggunaan');
+
+            $hasilPrediksi = $namaAkar;
+
+            return $hasilPrediksi;
     }
 
 }

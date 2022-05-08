@@ -13,17 +13,11 @@ class prediksiController extends Controller
     public function prosesCek(Request $request)
     {
         $idData = $request->idData;
-        $bandwidth      = 30;
+        // $bandwidth      = 30;
         $jumlahPenghuni = $request->jumlahPenghuni;
         
         $k = 0;
             
-        // total gadget
-        for ($i = 1; $i <= $jumlahPenghuni; $i++) { 
-            $banyakGadget   = "banyakGadget"."$i";
-            $banyakGadgetTotal[$i] = $request->$banyakGadget;
-        }
-
         // rapihkan dan store nama penghuni dan jumlah gadget
         for($i = 1; $i <= $jumlahPenghuni; $i++ ){
 
@@ -50,13 +44,13 @@ class prediksiController extends Controller
             // Note: nilai kode kiri,tengah,kanan (0,1,2)
 
             //Sorting Bandwidth
-            if($bandwidth <= 20){
-                $bandwidth = 0;         //rendah
-            }elseif($bandwidth <= 40){
-                $bandwidth = 1;         //sedang
-            }else{
-                $bandwidth = 2;         //tinggi
-            }
+            // if($bandwidth <= 20){
+            //     $bandwidth = 0;         //rendah
+            // }elseif($bandwidth <= 40){
+            //     $bandwidth = 1;         //sedang
+            // }else{
+            //     $bandwidth = 2;         //tinggi
+            // }
 
             //Sorting jumlahPenghuni
             if($jumlahPenghuni <= 3 ){

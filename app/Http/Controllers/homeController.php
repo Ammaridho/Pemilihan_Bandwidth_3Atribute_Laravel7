@@ -48,6 +48,7 @@ class homeController extends Controller
                 $idData = $data->id;
     
                 $namaData       = $data->namaHasilDecisionTree;
+                $akurasi        = $data->akurasi;
                 $jmlKel         = $data->jmlKel;
                 $jml            = unserialize($data->jml);
                 $totEntropykel  = $data->totEntropykel;
@@ -77,12 +78,12 @@ class homeController extends Controller
                         $best_providerrekomendasi = best_provider::where('hasildecisiontree_id',$idData)->where('bandwidth','>',40)->get();
                     }
     
-                    return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','simpulanprediksi','best_provider','best_providerrekomendasi','listAkun'));
+                    return view('content.home',compact('idData','namaData','akurasi','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','simpulanprediksi','best_provider','best_providerrekomendasi','listAkun'));
                 }
 
                 
 
-                return view('content.home',compact('idData','namaData','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','best_provider','listAkun'));
+                return view('content.home',compact('idData','namaData','akurasi','jmlKel','jml','totEntropykel','hasil','akar','semuaData','hasilPrediksi','best_provider','listAkun'));
             }
 
 

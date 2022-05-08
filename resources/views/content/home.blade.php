@@ -79,6 +79,7 @@
               <div class="row">
                 <div class="col">
                   <h1 class="text-center">Data : {{$namaData}}</h1>
+                  <h3 class="text-center">Akurasi : {{$akurasi}}</h3>
                 </div>
               </div>
         
